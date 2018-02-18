@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/Desktop/LCD/LCD.h
+wiringPiI2C.h
+-
+iostream
+-
+
+/home/pi/Desktop/LCD/lcd_i2c.h
+stdint.h
+-
+
+/home/pi/Desktop/LCD/lcdi2c.h
+ctype.h
+-
+errno.h
+-
+libgen.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+lcd_i2c.h
+/home/pi/Desktop/LCD/lcd_i2c.h
+
+/home/pi/Desktop/LCD/main.cpp
+iostream
+-
+LCD.h
+/home/pi/Desktop/LCD/LCD.h
+lcdi2c.h
+/home/pi/Desktop/LCD/lcdi2c.h
+
