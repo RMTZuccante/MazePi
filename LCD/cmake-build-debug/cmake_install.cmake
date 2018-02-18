@@ -1,4 +1,4 @@
-# Install script for directory: /home/pi/Desktop/LCD
+# Install script for directory: /home/pi/Desktop/Matrix/LCD
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/pi/Desktop/LCD/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/pi/Desktop/Matrix/LCD/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

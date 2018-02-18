@@ -6,17 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/Desktop/LCD/LCD.h
-wiringPiI2C.h
--
+/home/pi/Desktop/Matrix/LCD/LCD.h
 iostream
 -
+lcdi2c.h
+/home/pi/Desktop/Matrix/LCD/lcdi2c.h
 
-/home/pi/Desktop/LCD/lcd_i2c.h
+/home/pi/Desktop/Matrix/LCD/lcd_i2c.h
 stdint.h
 -
+c++/6/bits/basic_string.h
+-
 
-/home/pi/Desktop/LCD/lcdi2c.h
+/home/pi/Desktop/Matrix/LCD/lcdi2c.h
 ctype.h
 -
 errno.h
@@ -31,14 +33,16 @@ string.h
 -
 unistd.h
 -
+iostream
+-
+string
+-
 lcd_i2c.h
-/home/pi/Desktop/LCD/lcd_i2c.h
+/home/pi/Desktop/Matrix/LCD/lcd_i2c.h
 
-/home/pi/Desktop/LCD/main.cpp
+/home/pi/Desktop/Matrix/LCD/main.cpp
 iostream
 -
 LCD.h
-/home/pi/Desktop/LCD/LCD.h
-lcdi2c.h
-/home/pi/Desktop/LCD/lcdi2c.h
+/home/pi/Desktop/Matrix/LCD/LCD.h
 

@@ -10,6 +10,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <iostream>
+#include <string>
 #include "lcd_i2c.h"
 
 // option flags
@@ -32,8 +34,17 @@ static int process_options(int argc, char **argv);
 //! display values of the options variables
 static void print_options();
 
-int lcd2c (int argc, char **argv)
+int lcd2c (int argc, std::string args[])
 {
+    char* argv[argc];
+    for (int j = 0; j < argc; ++j) {
+        argv[j] = const_cast<char *>(args[j].c_str());
+    }
+    std::cout << "CMDs: ";
+    for (int i = 0; i < argc; ++i) {
+        std::cout << argv[i] << ' ';
+    }
+    std::cout << std::endl;
 
     if(process_options(argc,argv)){
         usage(argv[0]);

@@ -5,7 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/pi/Desktop/LCD/lcd_i2c.c" "/home/pi/Desktop/LCD/cmake-build-debug/CMakeFiles/LCD.dir/lcd_i2c.c.o"
+  "/home/pi/Desktop/Matrix/LCD/lcd_i2c.c" "/home/pi/Desktop/Matrix/LCD/cmake-build-debug/CMakeFiles/LCD.dir/lcd_i2c.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
@@ -13,7 +13,7 @@ set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_TARGET_INCLUDE_PATH
   )
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pi/Desktop/LCD/main.cpp" "/home/pi/Desktop/LCD/cmake-build-debug/CMakeFiles/LCD.dir/main.cpp.o"
+  "/home/pi/Desktop/Matrix/LCD/main.cpp" "/home/pi/Desktop/Matrix/LCD/cmake-build-debug/CMakeFiles/LCD.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

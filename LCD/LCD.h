@@ -1,10 +1,5 @@
-//
-// Created by pi on 14/02/18.
-//
-/* http://wiringpi.com/download-and-install/ */
-
-#include <wiringPiI2C.h>
 #include <iostream>
+#include "lcdi2c.h"
 
 using namespace std;
 
@@ -14,16 +9,59 @@ using namespace std;
 
 class LCD {
 public:
-    LCD(int addr) {
-        if ((fd = wiringPiI2CSetup(addr)) < 0) {
-            cout << "I2CSetup Failed " << fd << endl;
-        } else {
-            wiringPiI2CWrite(fd, 12);
-        }
+    LCD(string addr) {
+        command[0] = "-a";
+        command[1] = addr;
+        command[2] = "-i";
+		argc = 3;
+        sendCmd();
+        command[2] = "-b";
+        command[3] = "0";
+        command[4] = "-s";
+        command[5] = "0";
+        command[6] = "-x";
+        command[7] = "0";
+        command[8] = "-y";
+        command[9] = "0";
+		argc =10;
+		sendCmd();
+    }
+
+    void print(string s) {
+        command[10] = s;
+		argc ++;
+        sendCmd();
+		argc --;
+    }
+
+    void setRow(int row) {
+        command[9] = "" + row;
+    }
+
+    void setCol(int col) {
+        command[7] = "" + col;
+    }
+
+    void reset() {
+        command[10] = "-l";
+        command[7] = "0";
+        command[9] = "0";
+		argc++;
+        sendCmd();
+		argc--;
+    }
+
+    void setBackLight(bool on) {
+        command[3] = on? "1" : "0";
+        sendCmd();
     }
 
 private:
-    int fd;
+    void sendCmd() {
+        lcd2c(argc, command);
+    }
+	int argc = 0;
+    string command[12];
 };
 
 

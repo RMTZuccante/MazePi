@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/pi/Desktop/LCD/cmake-build-debug"/>
+				<Option working_dir="/home/pi/Desktop/Matrix/LCD/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/pi/Desktop/LCD/cmake-build-debug"/>
+				<Option working_dir="/home/pi/Desktop/Matrix/LCD/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/pi/Desktop/LCD/cmake-build-debug"/>
+				<Option working_dir="/home/pi/Desktop/Matrix/LCD/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="LCD">
-				<Option output="/home/pi/Desktop/LCD/cmake-build-debug/LCD" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/pi/Desktop/LCD/cmake-build-debug"/>
+				<Option output="/home/pi/Desktop/Matrix/LCD/cmake-build-debug/LCD" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/pi/Desktop/Matrix/LCD/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -54,15 +54,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 LCD"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 LCD"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="LCD/fast">
-				<Option output="/home/pi/Desktop/LCD/cmake-build-debug/LCD" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/pi/Desktop/LCD/cmake-build-debug"/>
+				<Option output="/home/pi/Desktop/Matrix/LCD/cmake-build-debug/LCD" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/pi/Desktop/Matrix/LCD/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -77,29 +77,29 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 LCD/fast"/>
-					<CompileFile command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -f &quot;/home/pi/Desktop/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 LCD/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/pi/Desktop/Matrix/LCD/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/pi/Desktop/LCD/LCD.h">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/LCD.h">
 			<Option target="LCD"/>
 		</Unit>
-		<Unit filename="/home/pi/Desktop/LCD/lcd_i2c.c">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/lcd_i2c.c">
 			<Option target="LCD"/>
 		</Unit>
-		<Unit filename="/home/pi/Desktop/LCD/lcd_i2c.h">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/lcd_i2c.h">
 			<Option target="LCD"/>
 		</Unit>
-		<Unit filename="/home/pi/Desktop/LCD/lcdi2c.h">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/lcdi2c.h">
 			<Option target="LCD"/>
 		</Unit>
-		<Unit filename="/home/pi/Desktop/LCD/main.cpp">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/main.cpp">
 			<Option target="LCD"/>
 		</Unit>
-		<Unit filename="/home/pi/Desktop/LCD/CMakeLists.txt">
+		<Unit filename="/home/pi/Desktop/Matrix/LCD/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

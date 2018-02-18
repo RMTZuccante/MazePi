@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/Desktop/LCD/lcd_i2c.c
+/home/pi/Desktop/Matrix/LCD/lcd_i2c.c
 lcd_i2c.h
-/home/pi/Desktop/LCD/lcd_i2c.h
+/home/pi/Desktop/Matrix/LCD/lcd_i2c.h
 wiringPi.h
 -
 wiringPiI2C.h
@@ -19,8 +19,12 @@ stdio.h
 -
 stdlib.h
 -
+c++/6/bits/basic_string.h
+-
 
-/home/pi/Desktop/LCD/lcd_i2c.h
+/home/pi/Desktop/Matrix/LCD/lcd_i2c.h
 stdint.h
+-
+c++/6/bits/basic_string.h
 -
 
