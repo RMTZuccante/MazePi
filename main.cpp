@@ -18,10 +18,10 @@ int main() {
         str >> inmsg;
 
         if (inmsg == "check") {
-            int dists[3];
-            int templ, tempr, c;
-            str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c;
-            mat.check(dists, templ, tempr, c);
+            uint16_t dists[3];
+            float templ, tempr, c, inc;
+            str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
+            mat.check(dists, templ, tempr, c, inc);
 
         } else if (inmsg == "getinfo") {
             stm._write(to_string(mat.isBlack()) + " " + to_string(mat.isVictim()));

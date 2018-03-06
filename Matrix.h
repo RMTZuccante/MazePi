@@ -9,6 +9,12 @@
 #include <fstream>
 #include <queue>
 #include <limits>
+#include <cfloat>
+#include <cmath>
+
+#define BLACK 2
+#define WHITE 1
+#define MIRROR 0
 
 #define NORTH 0
 #define EAST 1
@@ -20,9 +26,12 @@
 #define LEFT 2
 #define BACK 3
 
+#define INCLIMIT 25
+
+#define incl inc - zeroinc
+
 #define DELTATEMP 7 // Delta minima di temperatorua perchè la parete sia calda
-#define DISTWALL 18 // Distanza massima del robot dal muro vicino
-#define BLACK 23
+#define DISTWALL 10 // Distanza massima del robot dal muro vicino
 
 #define flr maze[floor]
 #define pos maze[floor][row][col]
@@ -42,7 +51,7 @@ public:
      * @param temperatureR the temperature measured by the right sensor
      * @param color the color of the floor
      */
-    void check(int dist[], int temperatureL, int temperatureR, int color);
+    void check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc);
 
     /**
      * @return direction
@@ -62,10 +71,12 @@ public:
     void backToStart();
 
 private:
+    float zeroinc = NAN;
     unsigned int direction;
     unsigned int visited;
-    int row, col;
-    bool floor;
+    int row, col, prow, pcol;
+    bool changingflr = false;
+    int floor;
     stack<intint > steps;
 
     /**
@@ -95,8 +106,9 @@ private:
         };
     };
 
-    Vector<Vector<Cell>> maze[2];
-    map<intint, set<intint>> graph[2];
+    Vector<Vector<Vector<Cell>>> maze;
+    Vector<intint > slope;
+    Vector<map<intint, set<intint>>> graph;
 };
 
 #endif //MATRIX_H

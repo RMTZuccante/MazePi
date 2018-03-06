@@ -6,8 +6,34 @@ Matrix::Matrix() {
     floor = false;
 }
 
-void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
+void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
     string debug = "";
+
+    if (zeroinc == NAN) zeroinc = inc;
+
+    if (incl < -INCLIMIT || incl > INCLIMIT) {
+        if (!changingflr) {
+            slope[floor] = make_pair(prow, pcol);
+
+            intint black(row, col);
+            set<intint > nodes = graph[floor][black];
+            for (intint i : nodes) {
+                graph[floor][i].erase(black);
+            }
+            graph[floor].erase(black);
+            visited--;
+
+            changingflr = true;
+            if (incl > 0) floor++;
+            else floor--;
+        }
+        return;
+    } else if (changingflr) {
+        row = slope[floor].first;
+        col = slope[floor].second;
+        changingflr = false;
+    }
+
     if (!pos.visited) visited++; // Se la cella è nuova conto una visitata in più
 
     pos.visited = true;
@@ -22,10 +48,9 @@ void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
         graph[floor].erase(black);
         visited--;
         return;
-    } else if (color == 21) {
-        pos.mirror = true;
-    }
-    // Se non ho il muro davanti
+    } else if (color == MIRROR) pos.mirror = true;
+
+// Se non ho il muro davanti
     if (dist[FRONT] > DISTWALL) {
         pos[direction] = true;
         intint p = getCoords(FRONT);
@@ -35,7 +60,7 @@ void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
             connect(p.first, p.second, row, col);
         }
     }
-    // Se non ho il muro a destra
+// Se non ho il muro a destra
     if (dist[RIGHT] > DISTWALL) {
         pos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
@@ -45,7 +70,7 @@ void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
             connect(p.first, p.second, row, col);
         }
     }
-    // Se non ho il muro a sinistra
+// Se non ho il muro a sinistra
     if (dist[LEFT] > DISTWALL) {
         pos[getSideDir(direction, 0)] = true;
         intint p = getCoords(LEFT);
@@ -55,8 +80,9 @@ void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
             connect(p.first, p.second, row, col);
         }
     }
-    // Se ho muri in tutte le direzioni in cui posso controllare di sicuro posso andare indietro quindi collego nel grafo
-    if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
+// Se ho muri in tutte le direzioni in cui posso controllare di sicuro posso andare indietro quindi collego nel grafo
+    if (!pos[direction] && !pos[
+            getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
             debug += BACK + '0';
@@ -64,14 +90,21 @@ void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
             connect(p.first, p.second, row, col);
         }
     }
-    // Verifica temperatura
-    //TODO tipo di vittima
+
+// Verifica temperatura
+//TODO tipo di vittima
     if (temperatureR > DELTATEMP && dist[1] < DISTWALL || temperatureL > DELTATEMP && dist[2] < DISTWALL) {
-        pos.victim = true;
+        pos.
+                victim = true;
     }
 }
 
 int Matrix::getDir() {
+    if (changingflr) {
+        while (!steps.empty()) steps.pop();
+        return FRONT;
+    }
+
     if (steps.empty()) pathToNonVisited(make_pair(row, col));
     if (steps.empty()) {
         flr[0][0].visited = false;
@@ -98,12 +131,16 @@ int Matrix::getDir() {
 }
 
 void Matrix::_forward() {
+    prow = row;
+    pcol = col;
     intint cell = getCoords(FRONT);
     row = cell.first;
     col = cell.second;
 }
 
 void Matrix::_back() {
+    prow = row;
+    pcol = col;
     intint cell = getCoords(BACK);
     row = cell.first;
     col = cell.second;
