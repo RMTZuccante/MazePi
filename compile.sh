@@ -1,1 +1,0 @@
-g++ main.cpp Matrix.cpp Matrix.h Vector.h STMConnect.h
