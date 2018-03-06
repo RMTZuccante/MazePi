@@ -1,7 +1,3 @@
-#include <fstream>
-#include <queue>
-#include <stack>
-#include <limits>
 #include "Matrix.h"
 
 Matrix::Matrix() {
@@ -10,7 +6,7 @@ Matrix::Matrix() {
     floor = false;
 }
 
-void Matrix::_check(int dist[], int temperatureL, int temperatureR, int color) {
+void Matrix::check(int dist[], int temperatureL, int temperatureR, int color) {
     string debug = "";
     if (!pos.visited) visited++; // Se la cella è nuova conto una visitata in più
 

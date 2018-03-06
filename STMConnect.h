@@ -1,8 +1,6 @@
-#include <string>
 #include <array>
 #include <memory>
 #include <sstream>
-#include <zconf.h>
 #include <iostream>
 #include <python2.7/Python.h>
 

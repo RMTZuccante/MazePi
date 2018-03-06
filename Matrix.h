@@ -2,10 +2,13 @@
 #define MATRIX_H
 
 #include "Vector.h"
-#include <iostream>
+
 #include <map>
 #include <set>
 #include <stack>
+#include <fstream>
+#include <queue>
+#include <limits>
 
 #define NORTH 0
 #define EAST 1
@@ -39,7 +42,7 @@ public:
      * @param temperatureR the temperature measured by the right sensor
      * @param color the color of the floor
      */
-    void _check(int dist[], int temperatureL, int temperatureR, int color);
+    void check(int dist[], int temperatureL, int temperatureR, int color);
 
     /**
      * @return direction
@@ -77,10 +80,6 @@ private:
 
     void pathToNonVisited(intint start);
 
-    //bool has(int, int);
-
-    //void newNode(int row1, int col1);
-
     struct Cell {
         bool *directions = new bool[4]{false, false, false, false};
         bool visited = false, black = false, mirror = false, victim = false;
@@ -98,7 +97,6 @@ private:
 
     Vector<Vector<Cell>> maze[2];
     map<intint, set<intint>> graph[2];
-    //vector<pair<pair<int, int>, vector<pair<int, int>>>> graph;
 };
 
 #endif //MATRIX_H

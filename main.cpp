@@ -1,3 +1,4 @@
+#include <iostream>
 #include "STMConnect.h"
 #include "Matrix.h"
 
@@ -8,36 +9,45 @@ int main() {
 
     Matrix mat;
 
+    stm.lcd("Funziona!");
+
     string inmsg;
     do {
+
         stringstream str(stm._read());
         str >> inmsg;
-        if (inmsg == "debug") {
-            string spc, msg;
-            while (str >> spc) {
-                msg += spc + ' ';
-            }
-            cout << "Arduino dice: " << msg << endl;
-        } else if (inmsg == "check") {
+
+        if (inmsg == "check") {
             int dists[3];
             int templ, tempr, c;
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c;
-            mat._check(dists, templ, tempr, c);
+            mat.check(dists, templ, tempr, c);
+
         } else if (inmsg == "getinfo") {
-            stm._write(mat.isBlack() + " " + mat.isVictim());
+            stm._write(to_string(mat.isBlack()) + " " + to_string(mat.isVictim()));
+
         } else if (inmsg == "move") {
             string dir;
             str >> dir;
             if (dir == "forth") mat._forward();
             else mat._back();
+
         } else if (inmsg == "end") {
             cout << "Fine? " << mat.allVisited() << endl;
-            stm._write(mat.allVisited() + "");
-        } else if (inmsg == "getdir") {
-            stm._write(mat.getDir() + "");
-        } else if (inmsg == "tostart") {
-            mat.backToStart();
+            stm._write(to_string(mat.allVisited()));
+
+        } else if (inmsg == "getdir") stm._write(to_string(mat.getDir()));
+
+        else if (inmsg == "tostart") mat.backToStart();
+
+        else if (inmsg == "debug") {
+            string spc, msg;
+            while (str >> spc) {
+                msg += spc + ' ';
+            }
+            cout << "Arduino dice: " << msg << endl;
         }
+
     } while (inmsg != "stop");
 
     cout << "ESCO!" << endl;
