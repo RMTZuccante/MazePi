@@ -3,6 +3,7 @@
 
 #include "Vector.h"
 
+#include <string>
 #include <map>
 #include <set>
 #include <stack>
@@ -28,7 +29,7 @@
 
 #define INCLIMIT 25
 
-#define incl inc - zeroinc
+#define incl (inc - zeroinc)
 
 #define DELTATEMP 7 // Delta minima di temperatorua perchè la parete sia calda
 #define DISTWALL 10 // Distanza massima del robot dal muro vicino
@@ -42,9 +43,9 @@ using namespace std;
 
 class Matrix {
 public:
+
     Matrix();
 
-    //TODO Non so di che tipo sono le variabili
     /**
      * @param dist array of distances {front, right, left}
      * @param temperatureL the temperature measured by the left sensor
@@ -70,11 +71,16 @@ public:
 
     void backToStart();
 
+    const string &getLcdstr() const;
+
+    void setLcdstr(const string &lcdstr);
+
 private:
     float zeroinc = NAN;
     unsigned int direction;
     unsigned int visited;
     int row, col, prow, pcol;
+    string lcdstr;
     bool changingflr = false;
     int floor;
     stack<intint > steps;

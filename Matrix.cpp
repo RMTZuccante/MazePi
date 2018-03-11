@@ -1,3 +1,4 @@
+
 #include "Matrix.h"
 
 Matrix::Matrix() {
@@ -7,7 +8,7 @@ Matrix::Matrix() {
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
-    string debug = "";
+    lcdstr = "Check: |--|            |--|     ";
 
     if (zeroinc == NAN) zeroinc = inc;
 
@@ -37,8 +38,10 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     if (!pos.visited) visited++; // Se la cella è nuova conto una visitata in più
 
     pos.visited = true;
-    //TODO colori
+
+
     if (color == BLACK) {
+        lcdstr[16] = 'B';
         pos.black = true;
         intint black(row, col);
         set<intint > nodes = graph[floor][black];
@@ -48,16 +51,20 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         graph[floor].erase(black);
         visited--;
         return;
-    } else if (color == MIRROR) pos.mirror = true;
+    } else if (color == MIRROR) {
+        pos.mirror = true;
+        lcdstr[16] = 'M';
+    }
 
 // Se non ho il muro davanti
     if (dist[FRONT] > DISTWALL) {
         pos[direction] = true;
         intint p = getCoords(FRONT);
         if (!flr[p.first][p.second].black) {
-            debug += FRONT + '0';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
+            lcdstr[10] = ' ';
+            lcdstr[26] = ' ';
         }
     }
 // Se non ho il muro a destra
@@ -65,7 +72,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
         if (!flr[p.first][p.second].black) {
-            debug += RIGHT + '0';
+            lcdstr[24] = lcdstr[25] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -75,7 +82,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 0)] = true;
         intint p = getCoords(LEFT);
         if (!flr[p.first][p.second].black) {
-            debug += LEFT + '0';
+            lcdstr[8] = lcdstr[9] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -85,7 +92,8 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
             getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
-            debug += BACK + '0';
+            lcdstr[7] = ' ';
+            lcdstr[23] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -93,9 +101,9 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 
 // Verifica temperatura
 //TODO tipo di vittima
-    if (temperatureR > DELTATEMP && dist[1] < DISTWALL || temperatureL > DELTATEMP && dist[2] < DISTWALL) {
-        pos.
-                victim = true;
+    if (temperatureR > DELTATEMP && dist[RIGHT] <= DISTWALL || temperatureL > DELTATEMP && dist[LEFT] <= DISTWALL) {
+        pos.victim = true;
+        lcdstr[17] = 'V';
     }
 }
 
@@ -252,4 +260,12 @@ void Matrix::pathToNonVisited(intint start) {
             }
         }
     }
+}
+
+const string &Matrix::getLcdstr() const {
+    return lcdstr;
+}
+
+void Matrix::setLcdstr(const string &lcdstr) {
+    Matrix::lcdstr = lcdstr;
 }

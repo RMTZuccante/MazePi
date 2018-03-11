@@ -6,8 +6,8 @@
 
 using namespace std;
 
-#ifndef UNTITLED_STMCONNETCT_H
-#define UNTITLED_STMCONNETCT_H
+#ifndef STMCONNETCT_H
+#define STMCONNETCT_H
 
 class STMConnect {
 public:
@@ -51,6 +51,7 @@ public:
         write = PyDict_GetItemString(dic, "write");
         closef = PyDict_GetItemString(dic, "close");
         lcd_write = PyDict_GetItemString(dic, "lcdWrite");
+        lcdw = PyTuple_New(1);
         PyTuple_SetItem(readargs, 0, stm);
         PyTuple_SetItem(writeargs, 0, stm);
     }
@@ -68,8 +69,22 @@ public:
         PyErr_Print();
     }
 
-    void lcd(string mex) {
-        PyObject_CallObject(lcd_write, PyString_FromString(mex.c_str()));
+    static void lcd(string mex) {
+        if (lcd_write == NULL) {
+            Py_Initialize();
+
+            PyRun_SimpleString("import sys");
+            PyRun_SimpleString("sys.path.append(\".\")");
+
+            PyObject *script = PyImport_Import(PyString_FromString("Serial"));
+            PyErr_Print();
+
+            PyObject *dic = PyModule_GetDict(script);
+            lcd_write = PyDict_GetItemString(dic, "lcdWrite");
+            lcdw = PyTuple_New(1);
+        }
+        PyTuple_SetItem(lcdw, 0, PyString_FromString(mex.c_str()));
+        PyObject_CallObject(lcd_write, lcdw);
     }
 
     void close() {
@@ -81,10 +96,11 @@ private:
     PyObject *closef;
     PyObject *read;
     PyObject *write;
-    PyObject *lcd_write;
+    static PyObject *lcd_write;
 
     PyObject *readargs = PyTuple_New(1);
     PyObject *writeargs = PyTuple_New(2);
+    static PyObject *lcdw;
 
     string findPort() {
         string list = STMConnect::exec("ls /dev/");
@@ -105,4 +121,7 @@ private:
     }
 };
 
-#endif //UNTITLED_STMCONNETCT_H
+PyObject *STMConnect::lcd_write;
+PyObject *STMConnect::lcdw;
+
+#endif

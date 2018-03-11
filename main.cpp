@@ -2,14 +2,17 @@
 #include "STMConnect.h"
 #include "Matrix.h"
 
+#define LCD true
+
 using namespace std;
 
 int main() {
     STMConnect stm(115200);
-
+#if LCD
+    stm.lcd("Connesso!");
+#endif
     Matrix mat;
 
-    stm.lcd("Funziona!");
 
     string inmsg;
     do {
@@ -18,11 +21,14 @@ int main() {
         str >> inmsg;
 
         if (inmsg == "check") {
+            mat.lcdstr = "null";
             uint16_t dists[3];
-            float templ, tempr, c, inc;
+            float templ = -1, tempr = -1, c = -1, inc = -1;
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
             mat.check(dists, templ, tempr, c, inc);
-
+            if (mat.lcdstr != "null") {
+                stm.lcd(mat.lcdstr);
+            }
         } else if (inmsg == "getinfo") {
             stm._write(to_string(mat.isBlack()) + " " + to_string(mat.isVictim()));
 
