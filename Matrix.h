@@ -12,6 +12,7 @@
 #include <limits>
 #include <cfloat>
 #include <cmath>
+#include <bits/unordered_set.h>
 
 #define BLACK 2
 #define WHITE 1
@@ -67,8 +68,6 @@ public:
 
     bool allVisited();
 
-    void backToStart();
-
     const std::string &getLcdstr() const;
 
     void setLcdstr(const std::string &lcdstr);
@@ -76,7 +75,7 @@ public:
 private:
     float zeroinc = NAN;
     unsigned int direction;
-    unsigned int visited;
+    bool backhome = false;
     int row, col, prow, pcol;
     std::string lcdstr;
     bool changingflr = false;
@@ -95,6 +94,9 @@ private:
 
     void pathToNonVisited(intint start);
 
+
+    void backToHome();
+
     struct Cell {
         bool *directions = new bool[4]{false, false, false, false};
         bool visited = false, black = false, mirror = false, victim = false;
@@ -112,7 +114,9 @@ private:
 
     Vector<Vector<Vector<Cell>>> maze;
     Vector<intint > slope;
+    Vector<intint > last;
     Vector<std::map<intint, std::set<intint>>> graph;
+    Vector<unsigned int> visited;
 };
 
 #endif //MATRIX_H

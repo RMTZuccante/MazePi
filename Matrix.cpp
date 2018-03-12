@@ -3,39 +3,33 @@
 
 Matrix::Matrix() {
     direction = NORTH;
-    row = col = visited = 0;
+    row = col = 0;
+    visited[0] = 0;
     floor = false;
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
     lcdstr = "Check: |--|            |--|     ";
-
+    if (!pos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
     if (zeroinc == NAN) zeroinc = inc;
 
     if (incl < -INCLIMIT || incl > INCLIMIT) {
         if (!changingflr) {
-            slope[floor] = std::make_pair(prow, pcol);
-
-            intint black(row, col);
-            std::set<intint > nodes = graph[floor][black];
-            for (intint i : nodes) {
-                graph[floor][i].erase(black);
-            }
-            graph[floor].erase(black);
-            visited--;
+            slope[floor] = std::make_pair(row, col);
+            last[floor] = std::make_pair(prow, pcol);
 
             changingflr = true;
             if (incl > 0) floor++;
             else floor--;
+            //Se sto andando in un nuovo piano inizializzo le celle visitate
+            if (visited.limits().first >= floor || visited.limits().second < floor) visited[floor] = 0;
         }
         return;
     } else if (changingflr) {
-        row = slope[floor].first;
-        col = slope[floor].second;
+        row = last[floor].first;
+        col = last[floor].second;
         changingflr = false;
     }
-
-    if (!pos.visited) visited++; // Se la cella è nuova conto una visitata in più
 
     pos.visited = true;
 
@@ -49,7 +43,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
             graph[floor][i].erase(black);
         }
         graph[floor].erase(black);
-        visited--;
+        visited[floor]--;
         return;
     } else if (color == MIRROR) {
         pos.mirror = true;
@@ -63,8 +57,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         if (!flr[p.first][p.second].black) {
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
-            lcdstr[10] = ' ';
-            lcdstr[26] = ' ';
+            lcdstr[10] = lcdstr[26] = ' ';
         }
     }
 // Se non ho il muro a destra
@@ -91,8 +84,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
-            lcdstr[7] = ' ';
-            lcdstr[23] = ' ';
+            lcdstr[7] = lcdstr[23] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -138,19 +130,23 @@ int Matrix::getDir() {
 }
 
 void Matrix::_forward() {
-    prow = row;
-    pcol = col;
-    intint cell = getCoords(FRONT);
-    row = cell.first;
-    col = cell.second;
+    if (!changingflr) {
+        prow = row;
+        pcol = col;
+        intint cell = getCoords(FRONT);
+        row = cell.first;
+        col = cell.second;
+    }
 }
 
 void Matrix::_back() {
-    prow = row;
-    pcol = col;
-    intint cell = getCoords(BACK);
-    row = cell.first;
-    col = cell.second;
+    if (!changingflr) {
+        prow = row;
+        pcol = col;
+        intint cell = getCoords(BACK);
+        row = cell.first;
+        col = cell.second;
+    }
 }
 
 bool Matrix::isBlack() {
@@ -162,14 +158,33 @@ bool Matrix::isVictim() {
 }
 
 bool Matrix::allVisited() {
-    return graph[floor].size() == visited;
+    if (changingflr) return false;
+    bool allv = graph[floor].size() == visited[floor];
+    if (allv) {
+        if (!backhome) {
+            backhome = true;
+            allv = false;
+            backToHome();
+        } else {
+            allv = false;
+            if (floor != 0) backToHome();
+            else if (col != 0 || row != 0) backToHome();
+            else allv = true;
+        }
+    }
+    return allv;
 }
 
 
-void Matrix::backToStart() {
-    if (row != 0 || col != 0) {
-        flr[0][0].visited = false;
-        visited--;
+void Matrix::backToHome() {
+    if (floor == 0) {
+        if (row != 0 || col != 0) {
+            flr[0][0].visited = false;
+            visited[floor]--;
+        }
+    } else if (row != slope[floor].first || col != slope[floor].second) {
+        flr[slope[floor].first][slope[floor].second].visited = false;
+        visited[floor]--;
     }
 }
 
