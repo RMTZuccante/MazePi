@@ -21,13 +21,13 @@ int main() {
         str >> inmsg;
 
         if (inmsg == "check") {
-            mat.lcdstr = "null";
+            mat.setLcdstr("null");
             uint16_t dists[3];
             float templ = -1, tempr = -1, c = -1, inc = -1;
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
             mat.check(dists, templ, tempr, c, inc);
-            if (mat.lcdstr != "null") {
-                stm.lcd(mat.lcdstr);
+            if (mat.getLcdstr() != "null") {
+                stm.lcd(mat.getLcdstr());
             }
         } else if (inmsg == "getinfo") {
             stm._write(to_string(mat.isBlack()) + " " + to_string(mat.isVictim()));
