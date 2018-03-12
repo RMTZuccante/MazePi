@@ -41,9 +41,6 @@ int main() {
             stm._write(std::to_string(mat.allVisited()));
 
         } else if (inmsg == "getdir") stm._write(std::to_string(mat.getDir()));
-
-        else if (inmsg == "tostart") mat.backToStart();
-
         else if (inmsg == "debug") {
             std::string spc, msg;
             while (str >> spc) {

@@ -12,7 +12,6 @@
 #include <limits>
 #include <cfloat>
 #include <cmath>
-#include <bits/unordered_set.h>
 
 #define BLACK 2
 #define WHITE 1
