@@ -4,8 +4,6 @@
 
 #define LCD true
 
-using namespace std;
-
 int main() {
     STMConnect stm(115200);
 #if LCD
@@ -14,10 +12,10 @@ int main() {
     Matrix mat;
 
 
-    string inmsg;
+    std::string inmsg;
     do {
 
-        stringstream str(stm._read());
+        std::stringstream str(stm._read());
         str >> inmsg;
 
         if (inmsg == "check") {
@@ -30,32 +28,32 @@ int main() {
                 stm.lcd(mat.getLcdstr());
             }
         } else if (inmsg == "getinfo") {
-            stm._write(to_string(mat.isBlack()) + " " + to_string(mat.isVictim()));
+            stm._write(std::to_string(mat.isBlack()) + " " + std::to_string(mat.isVictim()));
 
         } else if (inmsg == "move") {
-            string dir;
+            std::string dir;
             str >> dir;
             if (dir == "forth") mat._forward();
             else mat._back();
 
         } else if (inmsg == "end") {
-            cout << "Fine? " << mat.allVisited() << endl;
-            stm._write(to_string(mat.allVisited()));
+            std::cout << "Fine? " << mat.allVisited() << std::endl;
+            stm._write(std::to_string(mat.allVisited()));
 
-        } else if (inmsg == "getdir") stm._write(to_string(mat.getDir()));
+        } else if (inmsg == "getdir") stm._write(std::to_string(mat.getDir()));
 
         else if (inmsg == "tostart") mat.backToStart();
 
         else if (inmsg == "debug") {
-            string spc, msg;
+            std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            cout << "Arduino dice: " << msg << endl;
+            std::cout << "Arduino dice: " << msg << std::endl;
         }
 
     } while (inmsg != "stop");
 
-    cout << "ESCO!" << endl;
+    std::cout << "ESCO!" << std::endl;
     return 0;
 }

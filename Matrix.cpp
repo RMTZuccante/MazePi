@@ -14,10 +14,10 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 
     if (incl < -INCLIMIT || incl > INCLIMIT) {
         if (!changingflr) {
-            slope[floor] = make_pair(prow, pcol);
+            slope[floor] = std::make_pair(prow, pcol);
 
             intint black(row, col);
-            set<intint > nodes = graph[floor][black];
+            std::set<intint > nodes = graph[floor][black];
             for (intint i : nodes) {
                 graph[floor][i].erase(black);
             }
@@ -44,7 +44,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         lcdstr[16] = 'B';
         pos.black = true;
         intint black(row, col);
-        set<intint > nodes = graph[floor][black];
+        std::set<intint > nodes = graph[floor][black];
         for (intint i : nodes) {
             graph[floor][i].erase(black);
         }
@@ -88,8 +88,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         }
     }
 // Se ho muri in tutte le direzioni in cui posso controllare di sicuro posso andare indietro quindi collego nel grafo
-    if (!pos[direction] && !pos[
-            getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
+    if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
             lcdstr[7] = ' ';
@@ -113,10 +112,10 @@ int Matrix::getDir() {
         return FRONT;
     }
 
-    if (steps.empty()) pathToNonVisited(make_pair(row, col));
+    if (steps.empty()) pathToNonVisited(std::make_pair(row, col));
     if (steps.empty()) {
         flr[0][0].visited = false;
-        pathToNonVisited(make_pair(row, col));
+        pathToNonVisited(std::make_pair(row, col));
         flr[0][0].visited = true;
     }
     int dire = -1;
@@ -184,77 +183,77 @@ intint Matrix::getCoords(int dir) {
     if (direction == NORTH) {
         switch (dir) {
             case FRONT:
-                return make_pair(row - 1, col);
+                return std::make_pair(row - 1, col);
             case RIGHT:
-                return make_pair(row, col + 1);
+                return std::make_pair(row, col + 1);
             case LEFT:
-                return make_pair(row, col - 1);
+                return std::make_pair(row, col - 1);
             case BACK:
-                return make_pair(row + 1, col);
+                return std::make_pair(row + 1, col);
         }
     } else if (direction == EAST) {
         switch (dir) {
             case FRONT:
-                return make_pair(row, col + 1);
+                return std::make_pair(row, col + 1);
             case RIGHT:
-                return make_pair(row + 1, col);
+                return std::make_pair(row + 1, col);
             case LEFT:
-                return make_pair(row - 1, col);
+                return std::make_pair(row - 1, col);
             case BACK:
-                return make_pair(row, col - 1);
+                return std::make_pair(row, col - 1);
         }
     } else if (direction == SOUTH) {
         switch (dir) {
             case FRONT:
-                return make_pair(row + 1, col);
+                return std::make_pair(row + 1, col);
             case RIGHT:
-                return make_pair(row, col - 1);
+                return std::make_pair(row, col - 1);
             case LEFT:
-                return make_pair(row, col + 1);
+                return std::make_pair(row, col + 1);
             case BACK:
-                return make_pair(row - 1, col);
+                return std::make_pair(row - 1, col);
         }
     } else {
         switch (dir) {
             case FRONT:
-                return make_pair(row, col - 1);
+                return std::make_pair(row, col - 1);
             case RIGHT:
-                return make_pair(row - 1, col);
+                return std::make_pair(row - 1, col);
             case LEFT:
-                return make_pair(row + 1, col);
+                return std::make_pair(row + 1, col);
             case BACK:
-                return make_pair(row, col + 1);
+                return std::make_pair(row, col + 1);
         }
     }
 }
 
 void Matrix::connect(int row1, int col1, int row2, int col2) {
-    graph[floor][make_pair(row1, col1)].insert(make_pair(row2, col2));
+    graph[floor][std::make_pair(row1, col1)].insert(std::make_pair(row2, col2));
 }
 
 void Matrix::pathToNonVisited(intint start) {
-    map<intint, intint > chiamanti;
-    set<intint > visitati;
-    queue<intint > q;
+    std::map<intint, intint > chiamanti;
+    std::set<intint > visitati;
+    std::queue<intint > q;
     q.push(start);
-    chiamanti.insert(make_pair(start, make_pair(numeric_limits<int>::min(), 0)));
+    chiamanti.insert(std::make_pair(start, std::make_pair(std::numeric_limits<int>::min(), 0)));
     while (q.size() > 0) {
         intint p = static_cast<intint &&>(q.front());
         visitati.insert(p);
         q.pop();
         if (!flr[p.first][p.second].visited) {
             intint *curs = &p;
-            while (chiamanti[*curs].first != numeric_limits<int>::min()) {
-                steps.push(make_pair(curs->first, curs->second));
+            while (chiamanti[*curs].first != std::numeric_limits<int>::min()) {
+                steps.push(std::make_pair(curs->first, curs->second));
                 curs = &chiamanti[*curs];
             }
             return;
         } else {
-            set<intint >::iterator i;
+            std::set<intint >::iterator i;
             for (i = graph[floor][p].begin(); i != graph[floor][p].end(); ++i) {
                 intint coll = *i;
                 if (visitati.find(coll) == visitati.end()) {
-                    chiamanti.insert(make_pair(coll, make_pair(p.first, p.second)));
+                    chiamanti.insert(std::make_pair(coll, std::make_pair(p.first, p.second)));
                     q.push(coll);
                 }
             }
@@ -262,10 +261,10 @@ void Matrix::pathToNonVisited(intint start) {
     }
 }
 
-const string &Matrix::getLcdstr() const {
+const std::string &Matrix::getLcdstr() const {
     return lcdstr;
 }
 
-void Matrix::setLcdstr(const string &lcdstr) {
+void Matrix::setLcdstr(const std::string &lcdstr) {
     Matrix::lcdstr = lcdstr;
 }

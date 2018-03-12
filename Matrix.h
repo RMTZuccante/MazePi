@@ -37,9 +37,7 @@
 #define flr maze[floor]
 #define pos maze[floor][row][col]
 
-#define intint pair<int, int>
-
-using namespace std;
+#define intint std::pair<int, int>
 
 class Matrix {
 public:
@@ -71,19 +69,19 @@ public:
 
     void backToStart();
 
-    const string &getLcdstr() const;
+    const std::string &getLcdstr() const;
 
-    void setLcdstr(const string &lcdstr);
+    void setLcdstr(const std::string &lcdstr);
 
 private:
     float zeroinc = NAN;
     unsigned int direction;
     unsigned int visited;
     int row, col, prow, pcol;
-    string lcdstr;
+    std::string lcdstr;
     bool changingflr = false;
     int floor;
-    stack<intint > steps;
+    std::stack<intint > steps;
 
     /**
      * @param right right or left
@@ -114,7 +112,7 @@ private:
 
     Vector<Vector<Vector<Cell>>> maze;
     Vector<intint > slope;
-    Vector<map<intint, set<intint>>> graph;
+    Vector<std::map<intint, std::set<intint>>> graph;
 };
 
 #endif //MATRIX_H

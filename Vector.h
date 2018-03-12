@@ -4,8 +4,6 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
-
 template<class T>
 class Vector {
 public:
@@ -14,23 +12,6 @@ public:
         positive.resize(1);
         negative.resize(1);
     }
-
-    /*Vector(int neg, unsigned int pos) {
-        emptyn = emptyp = true;
-        if (neg < 1) {
-            if (neg == 0) neg = 1;
-            else neg = -neg;
-        }
-        if (pos == 0) pos = 1;
-        positive.resize(pos);
-        negative.resize(neg);
-    }
-
-    Vector(unsigned int size) {
-        emptyn = emptyp = true;
-        positive.resize(size);
-        negative.resize(1);
-    }*/
 
     T &operator[](int index) {
         if (index < 0) {
@@ -44,8 +25,8 @@ public:
         }
     }
 
-    pair<int, int> limits() {
-        return make_pair(emptyn ? 0 : -negative.size(), emptyp ? 0 : positive.size());
+    std::pair<int, int> limits() {
+        return std::make_pair<int, int >(emptyn ? 0 : -negative.size(), emptyp ? 0 : positive.size());
     }
 
     int size() {
@@ -54,8 +35,8 @@ public:
 
 private:
     bool emptyp, emptyn;
-    vector<T> positive;
-    vector<T> negative;
+    std::vector<T> positive;
+    std::vector<T> negative;
 };
 
 

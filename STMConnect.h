@@ -4,17 +4,15 @@
 #include <iostream>
 #include <python2.7/Python.h>
 
-using namespace std;
-
 #ifndef STMCONNETCT_H
 #define STMCONNETCT_H
 
 class STMConnect {
 public:
-    static string exec(const char *cmd) {
-        array<char, 128> buffer;
-        string result;
-        shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    static std::string exec(const char *cmd) {
+        std::array<char, 128> buffer;
+        std::string result;
+        std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
         if (!pipe) throw std::runtime_error("popen() failed!");
         while (!feof(pipe.get())) {
             if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
@@ -56,20 +54,19 @@ public:
         PyTuple_SetItem(writeargs, 0, stm);
     }
 
-    string _read() {
-        string s = PyString_AsString(PyObject_CallObject(read, readargs));
+    std::string _read() {
+        std::string s = PyString_AsString(PyObject_CallObject(read, readargs));
         PyErr_Print();
         return s;
     }
 
-    void _write(string cmd) {
-        cout << "ardp" << cmd << endl;
+    void _write(std::string cmd) {
         PyTuple_SetItem(writeargs, 1, PyString_FromString(cmd.c_str()));
         PyObject_CallObject(write, writeargs);
         PyErr_Print();
     }
 
-    static void lcd(string mex) {
+    static void lcd(std::string mex) {
         if (lcd_write == NULL) {
             Py_Initialize();
 
@@ -102,19 +99,19 @@ private:
     PyObject *writeargs = PyTuple_New(2);
     static PyObject *lcdw;
 
-    string findPort() {
-        string list = STMConnect::exec("ls /dev/");
-        stringstream ports(list);
-        string port;
-        string stm32;
+    std::string findPort() {
+        std::string list = STMConnect::exec("ls /dev/");
+        std::stringstream ports(list);
+        std::string port;
+        std::string stm32;
         while (ports >> port) {
-            if (port.find("ACM") != string::npos)
+            if (port.find("ACM") != std::string::npos)
                 stm32 = port;
         }
         return stm32;
     }
 
-    void replace(string *str, char a, char b) {
+    void replace(std::string *str, char a, char b) {
         for (int i = 0; i < str->size(); ++i) {
             if ((*str)[i] == a) (*str)[i] = b;
         }
