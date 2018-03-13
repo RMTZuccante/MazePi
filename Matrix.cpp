@@ -38,8 +38,10 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         row = last[floor].first;
         col = last[floor].second;
         changingflr = false;
-    } else if (!changingflr && waschanging)
+    } else if (waschanging) {
+        waschanging = false;
         return;
+    }
 
     pos.visited = true;
 
