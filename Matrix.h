@@ -77,7 +77,7 @@ private:
     bool backhome = false;
     int row, col, prow, pcol;
     std::string lcdstr;
-    bool changingflr = false;
+    bool changingflr = false, waschanging = false;
     int floor;
     std::stack<intint > steps;
 
@@ -112,7 +112,7 @@ private:
     };
 
     Vector<Vector<Vector<Cell>>> maze;
-    Vector<intint > slope;
+    //Vector<intint > slope;
     Vector<intint > last;
     Vector<std::map<intint, std::set<intint>>> graph;
     Vector<unsigned int> visited;

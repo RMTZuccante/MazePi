@@ -15,8 +15,17 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 
     if (incl < -INCLIMIT || incl > INCLIMIT) {
         if (!changingflr) {
-            slope[floor] = std::make_pair(row, col);
+            waschanging = true;
+            //slope[floor] = std::make_pair(row, col);
             last[floor] = std::make_pair(prow, pcol);
+
+            intint slope(row, col);
+            std::set<intint > nodes = graph[floor][slope];
+            for (intint i : nodes) {
+                graph[floor][i].erase(slope);
+            }
+            graph[floor].erase(slope);
+            visited[floor]--;
 
             changingflr = true;
             if (incl > 0) floor++;
@@ -29,7 +38,8 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         row = last[floor].first;
         col = last[floor].second;
         changingflr = false;
-    }
+    } else if (!changingflr && waschanging)
+        return;
 
     pos.visited = true;
 
@@ -182,8 +192,8 @@ void Matrix::backToHome() {
             flr[0][0].visited = false;
             visited[floor]--;
         }
-    } else if (row != slope[floor].first || col != slope[floor].second) {
-        flr[slope[floor].first][slope[floor].second].visited = false;
+    } else if (row != last[floor].first || col != last[floor].second) {
+        flr[last[floor].first][last[floor].second].visited = false;
         visited[floor]--;
     }
 }
