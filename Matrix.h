@@ -32,12 +32,44 @@
 #define incl (inc - zeroinc)
 
 #define DELTATEMP 7 // Delta minima di temperatorua perchè la parete sia calda
-#define DISTWALL 10 // Distanza massima del robot dal muro vicino
+#define DISTWALL 150 // Distanza massima del robot dal muro vicino
 
 #define flr maze[floor]
 #define pos maze[floor][row][col]
 
 #define intint std::pair<int, int>
+
+struct Cell {
+    bool *directions = new bool[4]{false, false, false, false};
+    bool visited = false, black = false, mirror = false, victim = false;
+
+    Cell() {};
+
+    Cell(bool dirs[]) {
+        directions = dirs;
+    };
+
+    bool &operator[](unsigned int index) {
+        return directions[index];
+    };
+};
+
+struct checkpoint {
+    int floor, row, col, direction;
+    uint16_t front, right, left;
+
+    checkpoint(){};
+
+    checkpoint(int floor, int row, int col, int direction, uint16_t front, uint16_t right, uint16_t left) {
+        this->floor = floor;
+        this->row = row;
+        this->col = col;
+        this->direction = direction;
+        this->front = front;
+        this->right = right;
+        this->left = left;
+    }
+};
 
 class Matrix {
 public:
@@ -71,6 +103,10 @@ public:
 
     void setLcdstr(const std::string &lcdstr);
 
+    void backToCheck();
+
+    bool compareCP(uint16_t dist[]);
+
 private:
     float zeroinc = NAN;
     unsigned int direction;
@@ -80,6 +116,8 @@ private:
     bool changingflr = false, waschanging = false;
     int floor;
     std::stack<intint > steps;
+
+    checkpoint lastcp;
 
     /**
      * @param right right or left
@@ -95,21 +133,6 @@ private:
 
 
     void backToHome();
-
-    struct Cell {
-        bool *directions = new bool[4]{false, false, false, false};
-        bool visited = false, black = false, mirror = false, victim = false;
-
-        Cell() {};
-
-        Cell(bool dirs[]) {
-            directions = dirs;
-        };
-
-        bool &operator[](unsigned int index) {
-            return directions[index];
-        };
-    };
 
     Vector<Vector<Vector<Cell>>> maze;
     //Vector<intint > slope;

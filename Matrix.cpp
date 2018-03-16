@@ -9,6 +9,8 @@ Matrix::Matrix() {
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
+    std::cout << "fr: " << dist[FRONT] << " lft: " << dist[LEFT] << "rgh: " << dist[RIGHT] << " templ: " << temperatureL
+              << " tempr: " << temperatureR << " col: " << color << std::endl;
     lcdstr = "Check: |--|            |--|     ";
     if (!pos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
     if (zeroinc == NAN) zeroinc = inc;
@@ -60,6 +62,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     } else if (color == MIRROR) {
         pos.mirror = true;
         lcdstr[16] = 'M';
+        lastcp = checkpoint(floor, row, col, direction, dist[FRONT], dist[RIGHT], dist[LEFT]);
     }
 
 // Se non ho il muro davanti
@@ -149,6 +152,20 @@ void Matrix::_forward() {
         row = cell.first;
         col = cell.second;
     }
+}
+
+bool Matrix::compareCP(uint16_t dist[]) {
+    bool frn = dist[FRONT] > lastcp.front - 50 && dist[FRONT] < lastcp.front + 50;
+    bool lft = dist[LEFT] > lastcp.left - 50 && dist[LEFT] < lastcp.left + 50;
+    bool rgh = dist[RIGHT] > lastcp.right - 50 && dist[RIGHT] < lastcp.right + 50;
+    return frn && lft && rgh;
+}
+
+void Matrix::backToCheck() {
+    floor = lastcp.floor;
+    row = lastcp.row;
+    col = lastcp.col;
+    direction = lastcp.direction;
 }
 
 void Matrix::_back() {
