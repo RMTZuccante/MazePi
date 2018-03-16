@@ -12,6 +12,10 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     std::cout << "fr: " << dist[FRONT] << " lft: " << dist[LEFT] << "rgh: " << dist[RIGHT] << " templ: " << temperatureL
               << " tempr: " << temperatureR << " col: " << color << std::endl;
     lcdstr = "Check: |--|            |--|     ";
+    if (moved) {
+        moved = false;
+        isnew = !pos.visited;
+    }
     if (!pos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
     if (zeroinc == NAN) zeroinc = inc;
 
@@ -146,6 +150,7 @@ int Matrix::getDir() {
 
 void Matrix::_forward() {
     if (!changingflr) {
+        moved = true;
         prow = row;
         pcol = col;
         intint cell = getCoords(FRONT);
@@ -183,7 +188,7 @@ bool Matrix::isBlack() {
 }
 
 bool Matrix::isVictim() {
-    return pos.victim;
+    return pos.victim && isnew;
 }
 
 bool Matrix::allVisited() {

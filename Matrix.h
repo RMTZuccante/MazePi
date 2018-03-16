@@ -58,7 +58,7 @@ struct checkpoint {
     int floor, row, col, direction;
     uint16_t front, right, left;
 
-    checkpoint(){};
+    checkpoint() {};
 
     checkpoint(int floor, int row, int col, int direction, uint16_t front, uint16_t right, uint16_t left) {
         this->floor = floor;
@@ -116,7 +116,8 @@ private:
     bool changingflr = false, waschanging = false;
     int floor;
     std::stack<intint > steps;
-
+    bool isnew = false;
+    bool moved = false;
     checkpoint lastcp;
 
     /**
