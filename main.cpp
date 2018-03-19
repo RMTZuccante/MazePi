@@ -5,18 +5,11 @@
 #define LCD true
 
 int main() {
-
-
-    std::cout << "\033[0;37mbold red text\033[0m\n" << std::endl;
-
-    //return 0;
-
     STMConnect stm(115200);
 #if LCD
     stm.lcd("Connesso!");
 #endif
     Matrix mat;
-
 
     std::string inmsg;
     do {
