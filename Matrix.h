@@ -27,7 +27,7 @@
 #define LEFT 2
 #define BACK 3
 
-#define INCLIMIT 25
+#define INCLIMIT 15
 
 #define incl (inc - zeroinc)
 

@@ -5,6 +5,12 @@
 #define LCD true
 
 int main() {
+
+
+    std::cout << "\033[0;37mbold red text\033[0m\n" << std::endl;
+
+    //return 0;
+
     STMConnect stm(115200);
 #if LCD
     stm.lcd("Connesso!");
@@ -61,7 +67,21 @@ int main() {
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            std::cout << "Arduino dice: " << msg << std::endl;
+            std::cout << "\033[1m" << msg << "\033[0m" << std::endl;
+
+        } else if (inmsg == "warning") {
+            std::string spc, msg;
+            while (str >> spc) {
+                msg += spc + ' ';
+            }
+            std::cout << "\033[31m" << msg << "\033[0m" << std::endl;
+
+        } else if (inmsg == "information") {
+            std::string spc, msg;
+            while (str >> spc) {
+                msg += spc + ' ';
+            }
+            std::cout << "\033[34m" << msg << "\033[0m" << std::endl;
         }
 
     } while (inmsg != "stop");
@@ -69,15 +89,3 @@ int main() {
     std::cout << "ESCO!" << std::endl;
     return 0;
 }
-
-/*
- * Commands:
- * check frdist rdist rdist templ tempr color incl
- * getinfo -> black victim
- * move [back/forth]
- * end -> allvisited
- * getdir -> dir
- * debug [str]
- * stop
- * checkpoint
- */
