@@ -16,16 +16,23 @@ int main() {
             fout.close();
             exit(1);
         case 2:
-            fout << "Error during handshaking at port " << stm.getPort() << std::endl;
-            fout.close();
-            exit(2);
+            int i = 0;
+            for (i; i < 5; ++i) {
+                usleep(1000000);
+                if (stm.init(115200) == 0) break;
+            }
+            if (i == 5) {
+                fout << "Error during handshaking at port " << stm.getPort() << std::endl;
+                fout.close();
+                exit(2);
+            }
         case 0:
             fout << "Connection established with device at port " << stm.getPort() << std::endl;
             break;
     }
 
 #if LCD
-    stm.lcd("Connesso!");
+    //stm.lcd("Connesso!");
 #endif
     Matrix mat;
 
@@ -44,7 +51,7 @@ int main() {
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
             mat.check(dists, templ, tempr, c, inc);
             if (mat.getLcdstr() != "null") {
-                stm.lcd(mat.getLcdstr());
+                //stm.lcd(mat.getLcdstr());
             }
         } else if (inmsg == "getinfo") {
             stm._write(std::to_string(mat.isBlack()) + " " + std::to_string(mat.isVictim()));

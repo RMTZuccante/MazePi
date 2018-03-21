@@ -2,8 +2,9 @@
 #include <memory>
 #include <sstream>
 #include <iostream>
-#include <python2.7/Python.h>
 #include <fstream>
+#include <time.h>
+#include "Serial.h"
 
 #ifndef STMCONNETCT_H
 #define STMCONNETCT_H
@@ -26,79 +27,34 @@ public:
 
     int init(int baudrate) {
         port = findPort();
-
         if (port == "") return 1;
-
-        Py_Initialize();
-
-        PyRun_SimpleString("import sys");
-        PyRun_SimpleString("sys.path.append(\".\")");
-
-        PyObject *script = PyImport_Import(PyString_FromString("Serial"));
-        PyErr_Print();
-
-        PyObject *dic = PyModule_GetDict(script);
-        PyObject *initf = PyDict_GetItemString(dic, "init");
-
-        PyObject *args = PyTuple_New(3);
-        PyTuple_SetItem(args, 0, PyString_FromString(("/dev/" + port).c_str()));
-
-        PyTuple_SetItem(args, 1, PyInt_FromLong(baudrate));
-        PyTuple_SetItem(args, 2, PyFloat_FromDouble(3));
-
-        PyObject *stm = NULL;
-        stm = PyObject_CallObject(initf, args);
-        PyErr_Clear();
-
-        if (stm == NULL) {
-            Py_Finalize();
-            return 2;
+        stm = new Serial(baudrate, "/dev/" + port);
+        if (stm->errs) return 1;
+        int c = 0;
+        srand(time(NULL));
+        for (c; c < 10; c++) {
+            std::string hs = "Start";
+            hs += rand() % 125 + 65;
+            _write(hs);
+            if (_read() == hs) {
+                _write("ok");
+                break;
+            } else _write("no");
         }
 
-        read = PyDict_GetItemString(dic, "read");
-        write = PyDict_GetItemString(dic, "write");
-        closef = PyDict_GetItemString(dic, "close");
-        lcd_write = PyDict_GetItemString(dic, "lcdWrite");
-        lcdw = PyTuple_New(1);
-        PyTuple_SetItem(readargs, 0, stm);
-        PyTuple_SetItem(writeargs, 0, stm);
+        if (c == 10) return 2;
         return 0;
     }
 
     std::string _read() {
-        std::string s = PyString_AsString(PyObject_CallObject(read, readargs));
-        PyErr_Print();
+        std::string s;
+        while ((s = stm->read()) == "");
+        s.erase(s.length() - 1, 1);
         return s;
     }
 
     void _write(std::string cmd) {
-        PyTuple_SetItem(writeargs, 1, PyString_FromString(cmd.c_str()));
-        PyObject_CallObject(write, writeargs);
-        PyErr_Print();
-    }
-
-    static void lcd(std::string mex) {
-        if (lcd_write == NULL) {
-            Py_Initialize();
-
-            PyRun_SimpleString("import sys");
-            PyRun_SimpleString("sys.path.append(\".\")");
-
-            PyObject *script = PyImport_Import(PyString_FromString("Serial"));
-            PyErr_Print();
-
-            PyObject *dic = PyModule_GetDict(script);
-            lcd_write = PyDict_GetItemString(dic, "lcdWrite");
-            lcdw = PyTuple_New(1);
-        }
-        PyTuple_SetItem(lcdw, 0, PyString_FromString(mex.c_str()));
-        PyObject_CallObject(lcd_write, lcdw);
-    }
-
-    void close() {
-        PyObject_CallObject(closef, readargs);
-        PyErr_Print();
-        Py_Finalize();
+        stm->write(cmd);
     }
 
     std::string getPort() {
@@ -106,15 +62,8 @@ public:
     }
 
 private:
-    PyObject *closef;
-    PyObject *read;
-    PyObject *write;
-    static PyObject *lcd_write;
 
-    PyObject *readargs = PyTuple_New(1);
-    PyObject *writeargs = PyTuple_New(2);
-    static PyObject *lcdw;
-
+    Serial *stm;
     std::string port;
 
     std::string findPort() {
@@ -123,21 +72,9 @@ private:
         std::stringstream ports(list);
         std::string port;
         std::string stm32;
-        while (ports >> port) {
-            //if (port.find("ACM") != std::string::npos)
-            stm32 = port;
-        }
+        while (ports >> port) stm32 = port;
         return stm32;
     }
-
-    void replace(std::string *str, char a, char b) {
-        for (int i = 0; i < str->size(); ++i) {
-            if ((*str)[i] == a) (*str)[i] = b;
-        }
-    }
 };
-
-PyObject *STMConnect::lcd_write;
-PyObject *STMConnect::lcdw;
 
 #endif
