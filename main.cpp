@@ -5,7 +5,25 @@
 #define LCD true
 
 int main() {
-    STMConnect stm(115200);
+    //std::string file =
+    std::ofstream fout("/home/nico/MazeLogs/log.txt");
+    fout << "Start of log file" << std::endl;
+    STMConnect stm;
+
+    switch (stm.init(115200)) {
+        case 1:
+            fout << "No serial port available" << std::endl;
+            fout.close();
+            exit(1);
+        case 2:
+            fout << "Error during handshaking at port " << stm.getPort() << std::endl;
+            fout.close();
+            exit(2);
+        case 0:
+            fout << "Connection established with device at port " << stm.getPort() << std::endl;
+            break;
+    }
+
 #if LCD
     stm.lcd("Connesso!");
 #endif
@@ -78,7 +96,6 @@ int main() {
         }
 
     } while (inmsg != "stop");
-
-    std::cout << "ESCO!" << std::endl;
+    fout.close();
     return 0;
 }

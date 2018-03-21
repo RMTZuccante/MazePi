@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <python2.7/Python.h>
+#include <fstream>
 
 #ifndef STMCONNETCT_H
 #define STMCONNETCT_H
@@ -21,7 +22,13 @@ public:
         return result;
     }
 
-    STMConnect(int baudrate) {
+    STMConnect() {};
+
+    int init(int baudrate) {
+        port = findPort();
+
+        if (port == "") return 1;
+
         Py_Initialize();
 
         PyRun_SimpleString("import sys");
@@ -34,15 +41,18 @@ public:
         PyObject *initf = PyDict_GetItemString(dic, "init");
 
         PyObject *args = PyTuple_New(3);
-        PyTuple_SetItem(args, 0, PyString_FromString(("/dev/" + findPort()).c_str()));
+        PyTuple_SetItem(args, 0, PyString_FromString(("/dev/" + port).c_str()));
+
         PyTuple_SetItem(args, 1, PyInt_FromLong(baudrate));
         PyTuple_SetItem(args, 2, PyFloat_FromDouble(3));
 
         PyObject *stm = NULL;
-        while (stm == NULL) {
-            usleep(5e5);
-            stm = PyObject_CallObject(initf, args);
-            PyErr_Clear();
+        stm = PyObject_CallObject(initf, args);
+        PyErr_Clear();
+
+        if (stm == NULL) {
+            Py_Finalize();
+            return 2;
         }
 
         read = PyDict_GetItemString(dic, "read");
@@ -52,6 +62,7 @@ public:
         lcdw = PyTuple_New(1);
         PyTuple_SetItem(readargs, 0, stm);
         PyTuple_SetItem(writeargs, 0, stm);
+        return 0;
     }
 
     std::string _read() {
@@ -87,6 +98,11 @@ public:
     void close() {
         PyObject_CallObject(closef, readargs);
         PyErr_Print();
+        Py_Finalize();
+    }
+
+    std::string getPort() {
+        return port;
     }
 
 private:
@@ -99,14 +115,17 @@ private:
     PyObject *writeargs = PyTuple_New(2);
     static PyObject *lcdw;
 
+    std::string port;
+
     std::string findPort() {
-        std::string list = STMConnect::exec("ls /dev/");
+        std::string list = STMConnect::exec("ls /dev/ | grep ACM");
+        if (list == "") return list;
         std::stringstream ports(list);
         std::string port;
         std::string stm32;
         while (ports >> port) {
-            if (port.find("ACM") != std::string::npos)
-                stm32 = port;
+            //if (port.find("ACM") != std::string::npos)
+            stm32 = port;
         }
         return stm32;
     }
