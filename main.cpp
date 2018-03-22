@@ -4,30 +4,47 @@
 
 #define LCD true
 
+void warining(std::string &msg, std::ofstream &fout) {
+    std::cout << "\033[31m" << msg << "\033[0m" << std::endl;
+    fout << "<t class='warning'>" << msg << "</t><br>" << std::endl;
+}
+
+void information(std::string &msg, std::ofstream &fout) {
+    std::cout << "\033[34m" << msg << "\033[0m" << std::endl;
+    fout << "<t class='information'>" << msg << "</t><br>" << std::endl;
+}
+
+void debug(std::string &msg, std::ofstream &fout) {
+    std::cout << "\033[1m" << msg << "\033[0m" << std::endl;
+    fout << "<t class='debug'>" << msg << "</t><br>" << std::endl;
+}
+
 int main() {
     //std::string file =
-    std::ofstream fout("/home/nico/MazeLogs/log.txt");
-    fout << "Start of log file" << std::endl;
+    std::ofstream fout("/home/nico/MazeLogs/log.html");
+    fout << "<link rel='stylesheet' type='text/css' href='log.css'>" << std::endl;
+    fout << "Start of log file<br>" << std::endl;
     STMConnect stm;
 
+    int i = 0;
     switch (stm.init(115200)) {
         case 1:
-            fout << "No serial port available" << std::endl;
+            warining(*(new std::string("No serial port available")), fout);
             fout.close();
             exit(1);
         case 2:
-            int i = 0;
             for (i; i < 5; ++i) {
                 usleep(1000000);
                 if (stm.init(115200) == 0) break;
             }
             if (i == 5) {
-                fout << "Error during handshaking at port " << stm.getPort() << std::endl;
+                warining(*(new std::string("Error during handshaking at port " + stm.getPort())), fout);
                 fout.close();
                 exit(2);
             }
+            break;
         case 0:
-            fout << "Connection established with device at port " << stm.getPort() << std::endl;
+            information(*(new std::string("Connection established with device at port " + stm.getPort())), fout);
             break;
     }
 
@@ -39,6 +56,7 @@ int main() {
     std::string inmsg;
     do {
         std::string re = stm._read();
+        fout << re << std::endl;
         std::cerr << re << std::endl;
         std::stringstream str(re);
         str >> inmsg;
@@ -85,21 +103,21 @@ int main() {
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            std::cout << "\033[1m" << msg << "\033[0m" << std::endl;
+            debug(msg, fout);
 
         } else if (inmsg == "warning") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            std::cout << "\033[31m" << msg << "\033[0m" << std::endl;
+            warining(msg, fout);
 
         } else if (inmsg == "information") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            std::cout << "\033[34m" << msg << "\033[0m" << std::endl;
+            information(msg, fout);
         }
 
     } while (inmsg != "stop");

@@ -50,6 +50,7 @@ public:
         std::string s;
         while ((s = stm->read()) == "");
         s.erase(s.length() - 1, 1);
+        replace(&s, '_', ' ');
         return s;
     }
 
@@ -74,6 +75,12 @@ private:
         std::string stm32;
         while (ports >> port) stm32 = port;
         return stm32;
+    }
+
+    void replace(std::string *str, char a, char b) {
+        for (int i = 0; i < str->size(); ++i) {
+            if ((*str)[i] == a) (*str)[i] = b;
+        }
     }
 };
 
