@@ -6,17 +6,17 @@
 
 void warining(std::string &msg, std::ofstream &fout) {
     std::cout << "\033[31m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='warning'>" << msg << "</t><br>" << std::endl;
+    fout << "<t class='warning'>" << msg << "</t>" << std::endl;
 }
 
 void information(std::string &msg, std::ofstream &fout) {
     std::cout << "\033[34m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='information'>" << msg << "</t><br>" << std::endl;
+    fout << "<t class='information'>" << msg << "</t>" << std::endl;
 }
 
 void debug(std::string &msg, std::ofstream &fout) {
     std::cout << "\033[1m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='debug'>" << msg << "</t><br>" << std::endl;
+    fout << "<t class='debug'>" << msg << "</t>" << std::endl;
 }
 
 int main() {
@@ -26,27 +26,36 @@ int main() {
     fout << "Start of log file<br>" << std::endl;
     STMConnect stm;
 
-    int i = 0;
-    switch (stm.init(115200)) {
-        case 1:
-            warining(*(new std::string("No serial port available")), fout);
-            fout.close();
-            exit(1);
-        case 2:
-            for (i; i < 5; ++i) {
-                usleep(1000000);
-                if (stm.init(115200) == 0) break;
-            }
-            if (i == 5) {
-                warining(*(new std::string("Error during handshaking at port " + stm.getPort())), fout);
-                fout.close();
-                exit(2);
-            }
-            break;
-        case 0:
-            information(*(new std::string("Connection established with device at port " + stm.getPort())), fout);
-            break;
-    }
+    bool keep = true;
+
+    int nf = 0, ni = 0;
+
+    while (keep)
+        switch (stm.init(115200)) {
+            case 1:
+                if (nf > 15) {
+                    warining(*(new std::string("No serial port available")), fout);
+                    fout.close();
+                    exit(1);
+                } else {
+                    nf++;
+                    usleep(1000000);
+                }
+            case 2:
+                if (ni > 5) {
+                    warining(*(new std::string("Error during handshaking at port " + stm.getPort())), fout);
+                    fout.close();
+                    exit(2);
+                } else {
+                    ni++;
+                    usleep(1000000);
+                }
+                break;
+            case 0:
+                information(*(new std::string("Connection established with device at port " + stm.getPort())), fout);
+                keep = false;
+                break;
+        }
 
 #if LCD
     //stm.lcd("Connesso!");
