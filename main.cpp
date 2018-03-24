@@ -1,6 +1,7 @@
 #include <iostream>
 #include "STMConnect.h"
 #include "Matrix.h"
+#include <ctime>
 
 #define LCD true
 
@@ -20,10 +21,19 @@ void debug(std::string &msg, std::ofstream &fout) {
 }
 
 int main() {
-    //std::string file =
-    std::ofstream fout("/home/nico/MazeLogs/log.html");
+    time_t time1;
+    struct tm *timeinfo;
+    time(&time1);
+    timeinfo = localtime(&time1);
+    char buf[18];
+    strftime(buf, sizeof(buf), "%d.%m.%y@%I:%M", timeinfo);
+    std::string fname(buf);
+
+    std::ofstream fout("/home/nico/MazeLogs/" + fname + ".html");
     fout << "<link rel='stylesheet' type='text/css' href='log.css'>" << std::endl;
-    fout << "Start of log file<br>" << std::endl;
+    fout << "<script type='text/javascript' src='js.js'></script>" << std::endl;
+    fout << "<body>";
+    fout << "Start of log file, date: " << fname << "<br><br>" << std::endl;
     STMConnect stm;
 
     bool keep = true;
@@ -41,6 +51,7 @@ int main() {
                     nf++;
                     usleep(1000000);
                 }
+                break;
             case 2:
                 if (ni > 5) {
                     warining(*(new std::string("Error during handshaking at port " + stm.getPort())), fout);
