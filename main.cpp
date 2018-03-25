@@ -1,24 +1,10 @@
 #include <iostream>
 #include "STMConnect.h"
 #include "Matrix.h"
+#include "Log.h"
 #include <ctime>
 
 #define LCD true
-
-void warining(std::string &msg, std::ofstream &fout) {
-    std::cout << "\033[31m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='warning'>" << msg << "</t>" << std::endl;
-}
-
-void information(std::string &msg, std::ofstream &fout) {
-    std::cout << "\033[34m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='information'>" << msg << "</t>" << std::endl;
-}
-
-void debug(std::string &msg, std::ofstream &fout) {
-    std::cout << "\033[1m" << msg << "\033[0m" << std::endl;
-    fout << "<t class='debug'>" << msg << "</t>" << std::endl;
-}
 
 int main() {
     time_t time1;
@@ -29,11 +15,8 @@ int main() {
     strftime(buf, sizeof(buf), "%d.%m.%y@%I:%M", timeinfo);
     std::string fname(buf);
 
-    std::ofstream fout("/home/nico/MazeLogs/" + fname + ".html");
-    fout << "<link rel='stylesheet' type='text/css' href='log.css'>" << std::endl;
-    fout << "<script type='text/javascript' src='js.js'></script>" << std::endl;
-    fout << "<body>";
-    fout << "Start of log file, date: " << fname << "<br><br>" << std::endl;
+    Log log(fname);
+
     STMConnect stm;
 
     bool keep = true;
@@ -44,8 +27,8 @@ int main() {
         switch (stm.init(115200)) {
             case 1:
                 if (nf > 15) {
-                    warining(*(new std::string("No serial port available")), fout);
-                    fout.close();
+                    log.writeLog(*(new std::string("No serial port available")), WARNING);
+                    log.close();
                     exit(1);
                 } else {
                     nf++;
@@ -54,8 +37,8 @@ int main() {
                 break;
             case 2:
                 if (ni > 5) {
-                    warining(*(new std::string("Error during handshaking at port " + stm.getPort())), fout);
-                    fout.close();
+                    log.writeLog(*(new std::string("Error during handshaking at port " + stm.getPort())), WARNING);
+                    log.close();
                     exit(2);
                 } else {
                     ni++;
@@ -63,7 +46,7 @@ int main() {
                 }
                 break;
             case 0:
-                information(*(new std::string("Connection established with device at port " + stm.getPort())), fout);
+                log.writeLog(*(new std::string("Connection established with device at port " + stm.getPort())), INFORMATION);
                 keep = false;
                 break;
         }
@@ -76,7 +59,7 @@ int main() {
     std::string inmsg;
     do {
         std::string re = stm._read();
-        fout << re << std::endl;
+        log.writeLog(re, DEBUG);
         std::cerr << re << std::endl;
         std::stringstream str(re);
         str >> inmsg;
@@ -123,24 +106,24 @@ int main() {
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            debug(msg, fout);
+            log.writeLog(msg, DEBUG);
 
         } else if (inmsg == "warning") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            warining(msg, fout);
+            log.writeLog(msg, WARNING);
 
         } else if (inmsg == "information") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            information(msg, fout);
+            log.writeLog(msg, INFORMATION);
         }
 
     } while (inmsg != "stop");
-    fout.close();
+    log.close();
     return 0;
 }

@@ -2,53 +2,38 @@
 #include "Serial.h"
 
 Serial::Serial(int baudrate, std::string port) {
-    errs = setPort(port, baudrate);
-    if (!errs) serial.open(port);
+    Py_Initialize();
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append(\".\")");
+
+    PyObject *script = PyImport_Import(PyString_FromString("Serial"));
+    PyObject *dic = PyModule_GetDict(script);
+    PyObject *initf = PyDict_GetItemString(dic, "init");
+
+    PyObject *args = PyTuple_New(2);
+    PyTuple_SetItem(args, 0, PyString_FromString(port.c_str()));
+    PyTuple_SetItem(args, 1, PyInt_FromLong(baudrate));
+
+    readf = PyDict_GetItemString(dic, "read");
+    writef = PyDict_GetItemString(dic, "write");
+
+    errs = !PyObject_IsTrue(PyObject_CallObject(initf, args));
+
+    if (errs) close();
 }
 
 std::string Serial::read() {
-    std::string out;
-    getline(serial, out);
-    serial.ignore();
-    return out;
+    std::string s = PyString_AsString(PyObject_CallObject(readf, PyTuple_New(0)));
+    PyErr_Print();
+    return s;
 }
 
 void Serial::write(std::string &data) {
-    serial.clear();
-    serial << data << std::endl;
-    serial.flush();
+    PyTuple_SetItem(writeArgs, 0, PyString_FromString(data.c_str()));
+    PyObject_CallObject(writef, writeArgs);
+    PyErr_Print();
 }
 
-bool Serial::setPort(const std::string &port, const int baudrate) {
-    int fd = open(port.c_str(), O_RDWR | O_NOCTTY);
-    if (fd == -1) return 1;
-    struct termios settings;
-    memset(&settings, 0, sizeof settings);
-    settings.c_cflag = getBaud(baudrate) | CRTSCTS | CS8 | CLOCAL | CREAD & ~PARENB & ~CSTOPB & ~CSIZE | CS8;
-    settings.c_iflag = IGNPAR;
-    settings.c_oflag |= OPOST;
-    settings.c_lflag = 0;
-    settings.c_cc[VTIME] = 10;
-    settings.c_cc[VMIN] = 0;
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd, TCSANOW, &settings);
-    close(fd);
-    return 0;
-}
-
-speed_t Serial::getBaud(int baudrate) {
-    switch (baudrate) {
-        case 4800:
-            return B4800;
-        case 9600:
-            return B9600;
-        case 19200:
-            return B19200;
-        case 38400:
-            return B38400;
-        case 57600:
-            return B57600;
-        case 115200:
-            return B115200;
-    }
+void Serial::close() {
+    Py_Finalize();
 }

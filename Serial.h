@@ -1,13 +1,8 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include <cstring>
 #include <string>
-#include <fstream>
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <termios.h>
+#include <python2.7/Python.h>
 
 class Serial {
 public:
@@ -19,13 +14,12 @@ public:
 
     void write(std::string &data);
 
+    void close();
+
 private:
-    std::fstream serial;
-
-    speed_t getBaud(int baudrate);
-
-    bool setPort(const std::string &port, const int baudrate);
-
+    PyObject *writeArgs = PyTuple_New(1);
+    PyObject *readf;
+    PyObject *writef;
 };
 
 
