@@ -16,7 +16,7 @@ Log::Log(std::string file) {
     logFile << "Start of log file, date: " << file << "<br><br>" << std::endl;
 }
 
-void Log::writeLog(std::string &text, uint8_t mode) {
+void Log::writeLog(std::basic_string<char> text, uint8_t mode) {
     switch (mode) {
         case WARNING:
             std::cout << "\033[31m" << text << "\033[0m" << std::endl;

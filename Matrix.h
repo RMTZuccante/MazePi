@@ -99,9 +99,9 @@ public:
 
     bool allVisited();
 
-    const std::string &getLcdstr() const;
+    const std::string &getLogStr() const;
 
-    void setLcdstr(const std::string &lcdstr);
+    void setLogStr(const std::string &lcdstr);
 
     void backToCheck();
 
@@ -112,7 +112,7 @@ private:
     unsigned int direction;
     bool backhome = false;
     int row, col, prow, pcol;
-    std::string lcdstr;
+    std::string logStr;
     bool changingflr = false, waschanging = false;
     int floor;
     std::stack<intint > steps;

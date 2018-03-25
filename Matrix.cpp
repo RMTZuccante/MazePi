@@ -9,9 +9,7 @@ Matrix::Matrix() {
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
-    std::cout << "fr: " << dist[FRONT] << " lft: " << dist[LEFT] << "rgh: " << dist[RIGHT] << " templ: " << temperatureL
-              << " tempr: " << temperatureR << " col: " << color << std::endl;
-    lcdstr = "Check: |--|            |--|     ";
+    logStr = "Check: |--|            |--|     ";
     if (moved) {
         moved = false;
         isnew = !pos.visited;
@@ -53,7 +51,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 
 
     if (color == BLACK) {
-        lcdstr[16] = 'B';
+        logStr[16] = 'B';
         pos.black = true;
         intint black(row, col);
         std::set<intint > nodes = graph[floor][black];
@@ -65,7 +63,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         return;
     } else if (color == MIRROR) {
         pos.mirror = true;
-        lcdstr[16] = 'M';
+        logStr[16] = 'M';
         lastcp = checkpoint(floor, row, col, direction, dist[FRONT], dist[RIGHT], dist[LEFT]);
     }
 
@@ -76,7 +74,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         if (!flr[p.first][p.second].black) {
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
-            lcdstr[10] = lcdstr[26] = ' ';
+            logStr[10] = logStr[26] = ' ';
         }
     }
 // Se non ho il muro a destra
@@ -84,7 +82,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
         if (!flr[p.first][p.second].black) {
-            lcdstr[24] = lcdstr[25] = ' ';
+            logStr[24] = logStr[25] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -94,7 +92,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 0)] = true;
         intint p = getCoords(LEFT);
         if (!flr[p.first][p.second].black) {
-            lcdstr[8] = lcdstr[9] = ' ';
+            logStr[8] = logStr[9] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -103,7 +101,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
-            lcdstr[7] = lcdstr[23] = ' ';
+            logStr[7] = logStr[23] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -113,7 +111,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 //TODO tipo di vittima
     if (temperatureR > DELTATEMP && dist[RIGHT] <= DISTWALL || temperatureL > DELTATEMP && dist[LEFT] <= DISTWALL) {
         pos.victim = true;
-        lcdstr[17] = 'V';
+        logStr[17] = 'V';
     }
 }
 
@@ -310,10 +308,10 @@ void Matrix::pathToNonVisited(intint start) {
     }
 }
 
-const std::string &Matrix::getLcdstr() const {
-    return lcdstr;
+const std::string &Matrix::getLogStr() const {
+    return logStr;
 }
 
-void Matrix::setLcdstr(const std::string &lcdstr) {
-    Matrix::lcdstr = lcdstr;
+void Matrix::setLogStr(const std::string &lcdstr) {
+    Matrix::logStr = lcdstr;
 }

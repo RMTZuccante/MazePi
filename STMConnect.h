@@ -11,7 +11,6 @@
 
 class STMConnect {
 public:
-    static std::string exec(const char *cmd);
 
     STMConnect();
 
@@ -29,6 +28,8 @@ private:
     std::string port;
 
     std::string findPort();
+
+    std::string exec(const char *cmd);
 
     void replace(std::string *str, char a, char b);
 };

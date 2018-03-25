@@ -1,6 +1,8 @@
 #include "STMConnect.h"
 
-static std::string STMConnect::exec(const char *cmd) {
+STMConnect::STMConnect() {}
+
+std::string STMConnect::exec(const char *cmd) {
     std::array<char, 128> buffer;
     std::string result;
     std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
@@ -11,8 +13,6 @@ static std::string STMConnect::exec(const char *cmd) {
     }
     return result;
 }
-
-STMConnect::STMConnect() {}
 
 int STMConnect::init(int baudrate) {
     port = findPort();

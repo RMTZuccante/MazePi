@@ -12,7 +12,7 @@ class Log {
 public:
     Log(std::string file);
 
-    void writeLog(std::string &text, uint8_t mode);
+    void writeLog(std::basic_string<char> text, uint8_t mode);
 
     void close();
 

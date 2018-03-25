@@ -46,7 +46,8 @@ int main() {
                 }
                 break;
             case 0:
-                log.writeLog(*(new std::string("Connection established with device at port " + stm.getPort())), INFORMATION);
+                log.writeLog(*(new std::string("Connection established with device at port " + stm.getPort())),
+                             INFORMATION);
                 keep = false;
                 break;
         }
@@ -60,19 +61,19 @@ int main() {
     do {
         std::string re = stm._read();
         log.writeLog(re, DEBUG);
-        std::cerr << re << std::endl;
         std::stringstream str(re);
         str >> inmsg;
 
         if (inmsg == "check") {
-            mat.setLcdstr("null");
+            mat.setLogStr("null");
             uint16_t dists[3];
             float templ = -1, tempr = -1, inc = -1;
             uint8_t c = -1;
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
             mat.check(dists, templ, tempr, c, inc);
-            if (mat.getLcdstr() != "null") {
-                //stm.lcd(mat.getLcdstr());
+            if (mat.getLogStr() != "null") {
+                std::string tolcd = mat.getLogStr().substr(0, 16) + "<br>" + mat.getLogStr().substr(16);
+                log.writeLog(tolcd, DEBUG);
             }
         } else if (inmsg == "getinfo") {
             stm._write(std::to_string(mat.isBlack()) + " " + std::to_string(mat.isVictim()));
@@ -97,11 +98,31 @@ int main() {
             }
 
         } else if (inmsg == "end") {
-            std::cout << "Fine? " << mat.allVisited() << std::endl;
-            stm._write(std::to_string(mat.allVisited()));
+            bool finish = mat.allVisited();
+            log.writeLog(("End? -> " + std::string(finish ? "YES" : "NO")), DEBUG);
+            stm._write(std::to_string(finish));
 
-        } else if (inmsg == "getdir") stm._write(std::to_string(mat.getDir()));
-        else if (inmsg == "debug") {
+        } else if (inmsg == "getdir") {
+            int dir = mat.getDir();
+            std::string sdir;
+            switch (dir) {
+                case FRONT:
+                    sdir = "FRONT";
+                    break;
+                case LEFT:
+                    sdir = "LEFT";
+                    break;
+                case RIGHT:
+                    sdir = "RIGHT";
+                    break;
+                case BACK:
+                    sdir = "BACK";
+                    break;
+            }
+            log.writeLog(("Dir = " + sdir), DEBUG);
+            stm._write(std::to_string(dir));
+
+        } else if (inmsg == "debug") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
