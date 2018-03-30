@@ -9,7 +9,8 @@ Matrix::Matrix() {
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
-    logStr = "Check: |--|            |--|     ";
+    logStr = "Check: |   |           |___|    ";
+    logStr[8] = logStr[9] = logStr[10] = 238;
     if (moved) {
         moved = false;
         isnew = !pos.visited;
@@ -74,7 +75,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         if (!flr[p.first][p.second].black) {
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
-            logStr[10] = logStr[26] = ' ';
+            logStr[8] = logStr[9] = logStr[10] = ' ';
         }
     }
 // Se non ho il muro a destra
@@ -82,7 +83,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
         if (!flr[p.first][p.second].black) {
-            logStr[24] = logStr[25] = ' ';
+            logStr[10] = logStr[26] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -92,7 +93,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         pos[getSideDir(direction, 0)] = true;
         intint p = getCoords(LEFT);
         if (!flr[p.first][p.second].black) {
-            logStr[8] = logStr[9] = ' ';
+            logStr[7] = logStr[23] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -101,7 +102,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
-            logStr[7] = logStr[23] = ' ';
+            logStr[24] = logStr[25] = logStr[26] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }

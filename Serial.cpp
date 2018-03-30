@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Serial.h"
 
 Serial::Serial(int baudrate, std::string port) {
@@ -18,7 +17,6 @@ Serial::Serial(int baudrate, std::string port) {
     writef = PyDict_GetItemString(dic, "write");
 
     errs = !PyObject_IsTrue(PyObject_CallObject(initf, args));
-
     if (errs) close();
 }
 

@@ -3,8 +3,7 @@
 #include "Matrix.h"
 #include "Log.h"
 #include <ctime>
-
-#define LCD true
+#include <cstring>
 
 int main() {
     time_t time1;
@@ -15,7 +14,7 @@ int main() {
     strftime(buf, sizeof(buf), "%d.%m.%y@%I:%M", timeinfo);
     std::string fname(buf);
 
-    Log log(fname);
+    Log::setLogFile(fname);
 
     STMConnect stm;
 
@@ -23,12 +22,12 @@ int main() {
 
     int nf = 0, ni = 0;
 
-    while (keep)
+    while (keep) {
         switch (stm.init(115200)) {
             case 1:
                 if (nf > 15) {
-                    log.writeLog(*(new std::string("No serial port available")), WARNING);
-                    log.close();
+                    Log::writeLog(std::string("No serial port available"), Log::WARNING);
+                    Log::close();
                     exit(1);
                 } else {
                     nf++;
@@ -37,8 +36,8 @@ int main() {
                 break;
             case 2:
                 if (ni > 5) {
-                    log.writeLog(*(new std::string("Error during handshaking at port " + stm.getPort())), WARNING);
-                    log.close();
+                    Log::writeLog(std::string("Error during handshaking at port " + stm.getPort()), Log::WARNING);
+                    Log::close();
                     exit(2);
                 } else {
                     ni++;
@@ -46,21 +45,19 @@ int main() {
                 }
                 break;
             case 0:
-                log.writeLog(*(new std::string("Connection established with device at port " + stm.getPort())),
-                             INFORMATION);
+                Log::writeLog(std::string("Connection established with device at port " + stm.getPort()),
+                              Log::INFORMATION);
                 keep = false;
                 break;
         }
+    }
 
-#if LCD
-    //stm.lcd("Connesso!");
-#endif
     Matrix mat;
 
     std::string inmsg;
     do {
         std::string re = stm._read();
-        log.writeLog(re, DEBUG);
+        Log::writeLog(re, Log::UNIMPORTANT);
         std::stringstream str(re);
         str >> inmsg;
 
@@ -72,8 +69,8 @@ int main() {
             str >> dists[0] >> dists[1] >> dists[2] >> templ >> tempr >> c >> inc;
             mat.check(dists, templ, tempr, c, inc);
             if (mat.getLogStr() != "null") {
-                std::string tolcd = mat.getLogStr().substr(0, 16) + "<br>" + mat.getLogStr().substr(16);
-                log.writeLog(tolcd, DEBUG);
+                std::string tolcd = mat.getLogStr().substr(0, 16) + "\n" + mat.getLogStr().substr(16);
+                Log::writeLog(tolcd, Log::DEBUG);
             }
         } else if (inmsg == "getinfo") {
             stm._write(std::to_string(mat.isBlack()) + " " + std::to_string(mat.isVictim()));
@@ -99,7 +96,7 @@ int main() {
 
         } else if (inmsg == "end") {
             bool finish = mat.allVisited();
-            log.writeLog(("End? -> " + std::string(finish ? "YES" : "NO")), DEBUG);
+            Log::writeLog(("End? -> " + std::string(finish ? "YES" : "NO")), Log::DEBUG);
             stm._write(std::to_string(finish));
 
         } else if (inmsg == "getdir") {
@@ -119,7 +116,7 @@ int main() {
                     sdir = "BACK";
                     break;
             }
-            log.writeLog(("Dir = " + sdir), DEBUG);
+            Log::writeLog(("Dir = " + sdir), Log::DEBUG);
             stm._write(std::to_string(dir));
 
         } else if (inmsg == "debug") {
@@ -127,24 +124,24 @@ int main() {
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            log.writeLog(msg, DEBUG);
+            Log::writeLog(msg, Log::DEBUG);
 
         } else if (inmsg == "warning") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            log.writeLog(msg, WARNING);
+            Log::writeLog(msg, Log::WARNING);
 
         } else if (inmsg == "information") {
             std::string spc, msg;
             while (str >> spc) {
                 msg += spc + ' ';
             }
-            log.writeLog(msg, INFORMATION);
+            Log::writeLog(msg, Log::INFORMATION);
         }
 
     } while (inmsg != "stop");
-    log.close();
+    Log::close();
     return 0;
 }

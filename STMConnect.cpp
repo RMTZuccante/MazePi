@@ -64,3 +64,7 @@ void STMConnect::replace(std::string *str, char a, char b) {
         if ((*str)[i] == a) (*str)[i] = b;
     }
 }
+
+void STMConnect::close() {
+    stm->close();
+}

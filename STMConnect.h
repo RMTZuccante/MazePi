@@ -22,6 +22,8 @@ public:
 
     std::string getPort();
 
+    void close();
+
 private:
 
     Serial *stm;

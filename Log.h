@@ -1,23 +1,31 @@
 #include <string>
+#include <iostream>
 #include <fstream>
 
 #ifndef LOG_H
 #define LOG_H
 
-#define WARNING 0
-#define INFORMATION 1
-#define DEBUG 2
-
 class Log {
 public:
-    Log(std::string file);
+    static const uint8_t WARNING = 0;
+    static const uint8_t INFORMATION = 1;
+    static const uint8_t DEBUG = 2;
+    static const uint8_t UNIMPORTANT = 3;
 
-    void writeLog(std::basic_string<char> text, uint8_t mode);
+    static void setLogFile(std::string file);
 
-    void close();
+    static void writeLog(std::string text, uint8_t mode);
+
+    static void close();
 
 private:
-    std::ofstream logFile;
+    static std::ofstream logFile;
+
+    static void toHTML(std::string &s) {
+        for (int i = 0; i < s.size(); ++i) {
+            if (s[i] == '\n') s = s.substr(0, i - 1) + "<br>" + s.substr(i + 1);
+        }
+    }
 };
 
 
