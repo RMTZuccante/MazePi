@@ -5,6 +5,7 @@
 #include <fstream>
 #include <time.h>
 #include "Serial.h"
+#include "RTMUtils.h"
 
 #ifndef STMCONNETCT_H
 #define STMCONNETCT_H
@@ -28,10 +29,6 @@ private:
 
     Serial *stm;
     std::string port;
-
-    std::string findPort();
-
-    std::string exec(const char *cmd);
 
     void replace(std::string *str, char a, char b);
 };

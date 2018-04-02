@@ -1,10 +1,10 @@
-import serial
+import serial, time
 
 def init(port, baudrate):
     try:
         global device
         device = serial.Serial(port, baudrate)
-        device.setDTR(False)
+        time.sleep(1.7)
         return device != None
     except:
         return False
@@ -14,8 +14,3 @@ def read():
 
 def write(msg):
     device.write(msg + '\n')
-
-
-print init("/dev/ttyACM0", 115200)
-write("okciko\n")
-print(read())

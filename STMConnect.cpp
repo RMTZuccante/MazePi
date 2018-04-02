@@ -2,22 +2,11 @@
 
 STMConnect::STMConnect() {}
 
-std::string STMConnect::exec(const char *cmd) {
-    std::array<char, 128> buffer;
-    std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get())) {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-            result += buffer.data();
-    }
-    return result;
-}
-
 int STMConnect::init(int baudrate) {
-    port = findPort();
+    port = RTMUtils::getPort("Arduino");
+
     if (port == "") return 1;
-    stm = new Serial(baudrate, "/dev/" + port);
+    stm = new Serial(baudrate, port);
     if (stm->errs) return 1;
     int c = 0;
     srand(time(NULL));
@@ -47,16 +36,6 @@ void STMConnect::_write(std::string cmd) {
 
 std::string STMConnect::getPort() {
     return port;
-}
-
-std::string STMConnect::findPort() {
-    std::string list = STMConnect::exec("ls /dev/ | grep ACM");
-    if (list == "") return list;
-    std::stringstream ports(list);
-    std::string port;
-    std::string stm32;
-    while (ports >> port) stm32 = port;
-    return stm32;
 }
 
 void STMConnect::replace(std::string *str, char a, char b) {

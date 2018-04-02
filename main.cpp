@@ -23,6 +23,8 @@ int main() {
     int nf = 0, ni = 0;
 
     while (keep) {
+        RTMUtils::loadPorts();
+
         switch (stm.init(115200)) {
             case 1:
                 if (nf > 15) {
