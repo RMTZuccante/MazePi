@@ -35,7 +35,7 @@
 #define DISTWALL 150 // Distanza massima del robot dal muro vicino
 
 #define flr maze[floor]
-#define pos maze[floor][row][col]
+#define mazepos maze[floor][row][col]
 
 #define intint std::pair<int, int>
 

@@ -16,7 +16,7 @@ public:
 
     static void loadPorts();
 
-    static std::string getPort(char *id);
+    static std::string getPort(std::string id);
 };
 
 

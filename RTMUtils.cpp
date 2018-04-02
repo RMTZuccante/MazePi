@@ -28,7 +28,7 @@ void RTMUtils::loadPorts() {
     }
 }
 
-std::string RTMUtils::getPort(char *id) {
+std::string RTMUtils::getPort(std::string id) {
     for (auto const &port : ports) {
         if (port.first.find(id) != std::string::npos) return port.second;
     }

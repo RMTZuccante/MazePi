@@ -1,9 +1,10 @@
+#ifndef LOG_H
+#define LOG_H
+
 #include <string>
 #include <iostream>
 #include <fstream>
-
-#ifndef LOG_H
-#define LOG_H
+#include <ctime>
 
 class Log {
 public:
@@ -20,13 +21,16 @@ public:
 
 private:
     static std::ofstream logFile;
+    static clock_t start;
 
     static void toHTML(std::string &s) {
         for (int i = 0; i < s.size(); ++i) {
             if (s[i] == '\n') s = s.substr(0, i - 1) + "<br>" + s.substr(i + 1);
         }
     }
+
+    static std::string getTime();
 };
 
 
-#endif LOG_H
+#endif

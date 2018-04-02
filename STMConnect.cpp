@@ -1,11 +1,9 @@
 #include "STMConnect.h"
 
-STMConnect::STMConnect() {}
-
 int STMConnect::init(int baudrate) {
-    port = RTMUtils::getPort("Arduino");
+    port = RTMUtils::getPort("Maple");
 
-    if (port == "") return 1;
+    if (port.empty()) return 1;
     stm = new Serial(baudrate, port);
     if (stm->errs) return 1;
     int c = 0;

@@ -2,17 +2,12 @@
 #include "STMConnect.h"
 #include "Matrix.h"
 #include "Log.h"
-#include <ctime>
-#include <cstring>
+#include "Camera.h"
 
 int main() {
-    time_t time1;
-    struct tm *timeinfo;
-    time(&time1);
-    timeinfo = localtime(&time1);
-    char buf[18];
-    strftime(buf, sizeof(buf), "%d.%m.%y@%I:%M", timeinfo);
-    std::string fname(buf);
+    std::string fname = "logN" + RTMUtils::exec("tr -cd ' ' < '/home/nico/MazeLogs/llist' | wc -c");
+
+    fname.pop_back();
 
     Log::setLogFile(fname);
 
@@ -53,6 +48,8 @@ int main() {
                 break;
         }
     }
+
+    //Camera leftcam(RTMUtils::getPort("Microsoft"));
 
     Matrix mat;
 

@@ -13,9 +13,9 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     logStr[8] = logStr[9] = logStr[10] = 238;
     if (moved) {
         moved = false;
-        isnew = !pos.visited;
+        isnew = !mazepos.visited;
     }
-    if (!pos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
+    if (!mazepos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
     if (zeroinc == NAN) zeroinc = inc;
 
     if (incl < -INCLIMIT || incl > INCLIMIT) {
@@ -48,12 +48,12 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         return;
     }
 
-    pos.visited = true;
+    mazepos.visited = true;
 
 
     if (color == BLACK) {
         logStr[16] = 'B';
-        pos.black = true;
+        mazepos.black = true;
         intint black(row, col);
         std::set<intint > nodes = graph[floor][black];
         for (intint i : nodes) {
@@ -63,14 +63,14 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         visited[floor]--;
         return;
     } else if (color == MIRROR) {
-        pos.mirror = true;
+        mazepos.mirror = true;
         logStr[16] = 'M';
         lastcp = checkpoint(floor, row, col, direction, dist[FRONT], dist[RIGHT], dist[LEFT]);
     }
 
 // Se non ho il muro davanti
     if (dist[FRONT] > DISTWALL) {
-        pos[direction] = true;
+        mazepos[direction] = true;
         intint p = getCoords(FRONT);
         if (!flr[p.first][p.second].black) {
             connect(row, col, p.first, p.second);
@@ -80,7 +80,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     }
 // Se non ho il muro a destra
     if (dist[RIGHT] > DISTWALL) {
-        pos[getSideDir(direction, 1)] = true;
+        mazepos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
         if (!flr[p.first][p.second].black) {
             logStr[10] = logStr[26] = ' ';
@@ -90,7 +90,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
     }
 // Se non ho il muro a sinistra
     if (dist[LEFT] > DISTWALL) {
-        pos[getSideDir(direction, 0)] = true;
+        mazepos[getSideDir(direction, 0)] = true;
         intint p = getCoords(LEFT);
         if (!flr[p.first][p.second].black) {
             logStr[7] = logStr[23] = ' ';
@@ -99,7 +99,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         }
     }
 // Se ho muri in tutte le direzioni in cui posso controllare di sicuro posso andare indietro quindi collego nel grafo
-    if (!pos[direction] && !pos[getSideDir(direction, 1)] && !pos[getSideDir(direction, 0)]) {
+    if (!mazepos[direction] && !mazepos[getSideDir(direction, 1)] && !mazepos[getSideDir(direction, 0)]) {
         intint p = getCoords(BACK);
         if (!flr[p.first][p.second].black) {
             logStr[24] = logStr[25] = logStr[26] = ' ';
@@ -111,7 +111,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
 // Verifica temperatura
 //TODO tipo di vittima
     if (temperatureR > DELTATEMP && dist[RIGHT] <= DISTWALL || temperatureL > DELTATEMP && dist[LEFT] <= DISTWALL) {
-        pos.victim = true;
+        mazepos.victim = true;
         logStr[17] = 'V';
     }
 }
@@ -183,11 +183,11 @@ void Matrix::_back() {
 }
 
 bool Matrix::isBlack() {
-    return pos.black;
+    return mazepos.black;
 }
 
 bool Matrix::isVictim() {
-    return pos.victim && isnew;
+    return mazepos.victim && isnew;
 }
 
 bool Matrix::allVisited() {
