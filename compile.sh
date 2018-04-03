@@ -1,5 +1,5 @@
-!/usr/bin/env bash
-cd /home/nico/Desktop/MazePi/
+#!/bin/bash
+cd '/home/nico/Desktop/MazePi/'
 make -j4
-cp /home/nico/Desktop/MazePi/PiMaze ~
-cp /home/nico/Desktop/MazePi/Serial.py ~
+cp '/home/nico/Desktop/MazePi/PiMaze' ~
+cp '/home/nico/Desktop/MazePi/Serial.py' ~
