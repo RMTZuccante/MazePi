@@ -9,44 +9,46 @@ Matrix::Matrix() {
 }
 
 void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint8_t color, float inc) {
-    logStr = "Check: |   |           |___|    ";
-    logStr[8] = logStr[9] = logStr[10] = 238;
+    std::string posInfo = "row: ";
+    posInfo += std::to_string(row);
+    posInfo += " col: ";
+    posInfo += std::to_string(col);
+    posInfo += " floor: ";
+    posInfo += std::to_string(floor);
+    Log::writeLog(posInfo, Log::INFORMATION);
+    logStr = "Check: |---|           |___|    ";
     if (moved) {
         moved = false;
         isnew = !mazepos.visited;
     }
-    if (!mazepos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
-    if (zeroinc == NAN) zeroinc = inc;
+    if (zeroinc == 200) zeroinc = inc;
 
-    if (incl < -INCLIMIT || incl > INCLIMIT) {
+    if (-incl > INCLIMIT || incl > INCLIMIT) {
         if (!changingflr) {
-            waschanging = true;
             //slope[floor] = std::make_pair(row, col);
             last[floor] = std::make_pair(prow, pcol);
 
             intint slope(row, col);
             std::set<intint > nodes = graph[floor][slope];
-            for (intint i : nodes) {
-                graph[floor][i].erase(slope);
-            }
+            for (intint i : nodes) graph[floor][i].erase(slope);
             graph[floor].erase(slope);
-            visited[floor]--;
 
             changingflr = true;
             if (incl > 0) floor++;
             else floor--;
             //Se sto andando in un nuovo piano inizializzo le celle visitate
-            if (visited.limits().first >= floor || visited.limits().second < floor) visited[floor] = 0;
+            if (visited.limits().first > floor || visited.limits().second <= floor) {
+                visited[floor] = 0;
+            }
         }
         return;
     } else if (changingflr) {
         row = last[floor].first;
         col = last[floor].second;
         changingflr = false;
-    } else if (waschanging) {
-        waschanging = false;
-        return;
     }
+
+    if (!changingflr && !mazepos.visited) visited[floor]++; // Se la cella è nuova conto una visitata in più
 
     mazepos.visited = true;
 
@@ -83,7 +85,7 @@ void Matrix::check(uint16_t dist[], float temperatureL, float temperatureR, uint
         mazepos[getSideDir(direction, 1)] = true;
         intint p = getCoords(RIGHT);
         if (!flr[p.first][p.second].black) {
-            logStr[10] = logStr[26] = ' ';
+            logStr[11] = logStr[27] = ' ';
             connect(row, col, p.first, p.second);
             connect(p.first, p.second, row, col);
         }
@@ -210,6 +212,7 @@ bool Matrix::allVisited() {
 
 
 void Matrix::backToHome() {
+    Log::writeLog("Back to home!!", Log::INFORMATION);
     if (floor == 0) {
         if (row != 0 || col != 0) {
             flr[0][0].visited = false;

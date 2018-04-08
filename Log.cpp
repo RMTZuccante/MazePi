@@ -14,29 +14,40 @@ void Log::setLogFile(std::string file) {
     logFile << "Start of log file <br><br>" << std::endl;
 }
 
-void Log::writeLog(std::string text, uint8_t mode) {
+void Log::writeLog(std::string mex, uint8_t mode) {
+    std::string t = getTime();
+    std::string text;
+    unsigned int pos = mex.find('\n');
+    if (pos <= mex.length()) {
+        std::string al = " ";
+        for (int j = 0; j < t.length(); ++j) {
+            al += ' ';
+        }
+        text = mex.substr(0, pos + 1) + al + mex.substr(pos + 1);
+    } else text = mex;
+
     switch (mode) {
         case WARNING:
-            std::cout << "\033[31m" << getTime() << ' ' << text << "\033[0m" << std::endl;
-            if (logFile.is_open())logFile << "<t class='warning'>" << getTime() << ' ' << text << "</t>" << std::endl;
+            std::cout << "\033[31m" << t << ' ' << text << "\033[0m" << std::endl;
             toHTML(text);
+            if (logFile.is_open())logFile << "<t class='warning'>" << t << ' ' << text << "</t>" << std::endl;
             break;
         case INFORMATION:
-            std::cout << "\033[34m" << getTime() << ' ' << text << "\033[0m" << std::endl;
-            if (logFile.is_open())
-                logFile << "<t class='information'>" << getTime() << ' ' << text << "</t>" << std::endl;
+            std::cout << "\033[34m" << t << ' ' << text << "\033[0m" << std::endl;
             toHTML(text);
+            if (logFile.is_open())
+                logFile << "<t class='information'>" << t << ' ' << text << "</t>" << std::endl;
             break;
         case DEBUG:
-            std::cout << "\033[1m" << getTime() << ' ' << text << "\033[0m" << std::endl;
-            if (logFile.is_open())logFile << "<t class='debug'>" << getTime() << ' ' << text << "</t>" << std::endl;
+            std::cout << "\033[1m" << t << ' ' << text << "\033[0m" << std::endl;
             toHTML(text);
+            if (logFile.is_open())logFile << "<t class='debug'>" << t << ' ' << text << "</t>" << std::endl;
             break;
         case UNIMPORTANT:
-            std::cout << getTime() << ' ' << text << std::endl;
-            if (logFile.is_open())
-                logFile << "<t class='unimportant'>" << getTime() << ' ' << text << "</t>" << std::endl;
+            std::cout << t << ' ' << text << std::endl;
             toHTML(text);
+            if (logFile.is_open())
+                logFile << "<t class='unimportant'>" << t << ' ' << text << "</t>" << std::endl;
             break;
     }
 }
@@ -46,5 +57,5 @@ void Log::close() {
 }
 
 std::string Log::getTime() {
-    return "[mins:secs:mils]";
+    return ""; // "[mins:secs:mils]";
 }

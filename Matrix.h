@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include "Vector.h"
+#include "Log.h"
 
 #include <string>
 #include <map>
@@ -108,7 +109,7 @@ public:
     bool compareCP(uint16_t dist[]);
 
 private:
-    float zeroinc = NAN;
+    float zeroinc = 200;
     unsigned int direction;
     bool backhome = false;
     int row, col, prow, pcol;
@@ -117,7 +118,7 @@ private:
     int floor;
     std::stack<intint > steps;
     bool isnew = false;
-    bool moved = false;
+    bool moved = true;
     checkpoint lastcp;
 
     /**
