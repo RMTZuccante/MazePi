@@ -13,7 +13,7 @@
 class STMConnect {
 public:
 
-    int init(int baudrate);
+    int init(std::string &port, int baudrate);
 
     std::string _read();
 

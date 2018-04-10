@@ -4,7 +4,17 @@
 #include "Log.h"
 #include "Camera.h"
 
-int main() {
+int main(int argc, char **argv) {
+
+    std::string port = "Maple";
+    int debuglevel = 2;
+    bool paused = false;
+
+    for (int i = 0; i < argc; ++i) {
+        if (argv[i] == "-p") port = argv[i + 1];
+        else if (argv[i] == "-d") debuglevel = atoi(argv[i + 1]);
+    }
+
     std::string fname = "logN" + RTMUtils::exec("tr -cd ' ' < '/home/nico/MazeLogs/llist' | wc -c");
 
     fname.pop_back();
@@ -20,7 +30,7 @@ int main() {
     while (keep) {
         RTMUtils::loadPorts();
 
-        switch (stm.init(115200)) {
+        switch (stm.init(port, 115200)) {
             case 1:
                 if (nf > 15) {
                     Log::writeLog(std::string("No serial port available"), Log::WARNING);
@@ -138,6 +148,17 @@ int main() {
                 msg += spc + ' ';
             }
             Log::writeLog(msg, Log::INFORMATION);
+
+        } else if (inmsg == "debuglevel") {
+            stm._write(std::to_string(debuglevel));
+
+        } else if (inmsg == "checkpoint") {
+            paused = true;
+            mat.backToCheck();
+
+        } else if (inmsg == "paused") {
+            stm._write(std::to_string(paused));
+            paused = false;
         }
 
     } while (inmsg != "stop");
